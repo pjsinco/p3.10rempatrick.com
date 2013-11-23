@@ -6,9 +6,9 @@
   //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
   
   var context = new webkitAudioContext();
-  var sound;
-  var tempo = 80;
-  var eighthNoteTime = (60 / tempo) / 2;
+  var kick;
+  var tempo = 120;
+  var quarterNoteTime = (tempo / 4) / 60;
 
   /*
    *LOAD SOUND
@@ -23,30 +23,60 @@
     //(is buffer what is returned from decodeAudioData()?)
     context.decodeAudioData(request.response, function(buffer) {
       //decode audio and store in a variable so we can refer back to it
-      sound = buffer;
+      kick = buffer;
     });
   };
   request.send();
 
+  //prevent repeated keydown events from holding key down
+  //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
+  var allowed = true;
+
+  $(window).keydown(function() {
+    if (!allowed) {
+      return;
+    } else {
+      allowed = false;
+      for (var i = 0; i < 4; i++) {
+        playSound(kick, context.currentTime + (quarterNoteTime * i));
+        console.log(context.currentTime + (quarterNoteTime * i));
+      }
+    }
+  });
+
+  $(window).keyup(function() {
+    allowed = true;
+  });
+
   /*
    *ADD EVENT LISTENER
    */
-  //$(window).keydown(onKeyDown);
-  $(window).keydown(function() {
-      //playSound(sound, 0)
-      for (var bar = 0; bar < 2; bar++) {
-        var time = context.currentTime + bar * 8 * eighthNoteTime;
-        playSound(sound, time);
-        playSound(sound, time + 4 * eighthNoteTime);
-      }
-    }
-  );
+  //$(window).keydown(function() {
+  //    //console.log(event.timeStamp);
+  //    for (var i = 0; i < 4; i++) {
+  //      playSound(kick, context.currentTime + (quarterNoteTime * i));
+  //      console.log(context.currentTime + (quarterNoteTime * i));
+  //    }
+  //});
 
-  function playTwoBars() {
+      //playSound(kick, 0)
+
+      //for (var bar = 0; bar < 2; bar++) {
+      //  var time = context.currentTime + bar * 8 * eighthNoteTime;
+      //  playSound(kick, time);
+      //  playSound(kick, time + 4 * eighthNoteTime);
+      //}
+  //});
+
+  function playTenPerSecond() {
+    var time = 0;
+    for (var i = 0; i < 10; i += 0.1) {
+      playSound(kick, time + i);
+    }    
   }
 
   function playSound(buffer, time) {
-    // the 4 lines of code needed to play a sound
+    // the 4 lines of code needed to play a kick
     var source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);
@@ -56,15 +86,15 @@
   
 
   function onKeyDown() {
-    //NOTE: we need all 4 lines of code each time we want to play a sound
+    //NOTE: we need all 4 lines of code each time we want to play a kick
 
-    // initialize a new sound
+    // initialize a new kick
     var source = context.createBufferSource();
     //attach audio data to playSound as its buffer
-    source.buffer = sound;
+    source.buffer = kick;
     //link source to destination, which is our output
     source.connect(context.destination);
-    //play sound
+    //play kick
     source.start(0);
 
   }
