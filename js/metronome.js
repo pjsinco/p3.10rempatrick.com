@@ -9,6 +9,7 @@
   var kick;
   var tempo = 120;
   var quarterNoteTime = (tempo / 4) / 60;
+  var startTime;
 
   /*
    *LOAD SOUND
@@ -32,21 +33,52 @@
   //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
   var allowed = true;
 
-  $(window).keydown(function() {
-    if (!allowed) {
-      return;
-    } else {
-      allowed = false;
+
+  $('#tap').click(function() {
+    //console.log('tapped');
+    console.log(startTime);
+    console.log(context.currentTime);
+    console.log(context.currentTime - startTime);
+  });
+
+
+  //$(window).keydown(function() {
+  $('#4beats').click(function() {
+    //if (!allowed) {
+      //return;
+    //} else {
+      //allowed = false;
       for (var i = 0; i < 4; i++) {
         playSound(kick, context.currentTime + (quarterNoteTime * i));
         console.log(context.currentTime + (quarterNoteTime * i));
       }
-    }
+    //}
   });
 
-  $(window).keyup(function() {
-    allowed = true;
+  $('#8beats').click(function() {
+    //if (!allowed) {
+      //return;
+    //} else {
+      //allowed = false;
+      for (var i = 0; i < 8; i++) {
+        playSound(kick, context.currentTime + (quarterNoteTime * i));
+        console.log(context.currentTime + (quarterNoteTime * i));
+      }
+    //}
   });
+
+  $('#16beats').click(function() {
+      startTime = context.currentTime;
+      for (var i = 0; i < 16; i++) {
+        playSound(kick, context.currentTime + (quarterNoteTime * i));
+        console.log(context.currentTime + (quarterNoteTime * i));
+      }
+    
+  });
+
+  //$(window).keyup(function() {
+    //allowed = true;
+  //});
 
   /*
    *ADD EVENT LISTENER
