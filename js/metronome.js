@@ -29,11 +29,6 @@
   };
   request.send();
 
-  //prevent repeated keydown events from holding key down
-  //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
-  var allowed = true;
-
-
   $('#tap').click(function() {
     //console.log('tapped');
     console.log(startTime);
@@ -41,39 +36,36 @@
     console.log(context.currentTime - startTime);
   });
 
+  $(window).keydown(function() {
+    //console.log('startTime: ' + startTime);
+    //console.log('context.currentTime: ' + context.currentTime);
+    console.log('diff: ' + (context.currentTime - startTime));
+  });
+
 
   //$(window).keydown(function() {
   $('#4beats').click(function() {
-    //if (!allowed) {
-      //return;
-    //} else {
-      //allowed = false;
-      for (var i = 0; i < 4; i++) {
-        playSound(kick, context.currentTime + (quarterNoteTime * i));
-        console.log(context.currentTime + (quarterNoteTime * i));
-      }
-    //}
+    startTime = context.currentTime;
+    for (var i = 0; i < 4; i++) {
+      playSound(kick, context.currentTime + (quarterNoteTime * i));
+      console.log(context.currentTime + (quarterNoteTime * i));
+    }
   });
 
   $('#8beats').click(function() {
-    //if (!allowed) {
-      //return;
-    //} else {
-      //allowed = false;
-      for (var i = 0; i < 8; i++) {
-        playSound(kick, context.currentTime + (quarterNoteTime * i));
-        console.log(context.currentTime + (quarterNoteTime * i));
-      }
-    //}
+    startTime = context.currentTime;
+    for (var i = 0; i < 8; i++) {
+      playSound(kick, context.currentTime + (quarterNoteTime * i));
+      console.log(context.currentTime + (quarterNoteTime * i));
+    }
   });
 
   $('#16beats').click(function() {
-      startTime = context.currentTime;
-      for (var i = 0; i < 16; i++) {
-        playSound(kick, context.currentTime + (quarterNoteTime * i));
-        console.log(context.currentTime + (quarterNoteTime * i));
-      }
-    
+    startTime = context.currentTime;
+    for (var i = 0; i < 16; i++) {
+      playSound(kick, context.currentTime + (quarterNoteTime * i));
+      console.log(context.currentTime + (quarterNoteTime * i));
+    }
   });
 
   //$(window).keyup(function() {
