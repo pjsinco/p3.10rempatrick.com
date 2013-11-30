@@ -4,9 +4,9 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>		
 	<script type="text/javascript" src="js/raphael-min.js"></script>	  
 	<script type="text/javascript" src="js/underscore-min.js"></script>
+	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 	<script type="text/javascript" src="js/rhythmr-notation2.js"></script>
 <!-- 	<script type="text/javascript" src="js/vexflow-json.js"></script> -->
-	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 
 <!-- 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>		 -->
     <style type="text/css" media="screen">
@@ -28,6 +28,7 @@
 
     <div id='tap'></div>
 
+    <canvas id='zero' width=700 height=100></canvas>
     <canvas id='one' width=700 height=100></canvas>
     <canvas id='two' width=700 height=100></canvas>
     <canvas id='three' width=700 height=100></canvas>

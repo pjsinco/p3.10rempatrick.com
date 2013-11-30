@@ -16,7 +16,30 @@ function Measure() {
     };
   };
 
-  console.log(this.group.length);
+  // pass in array of durations
+  this.getVexNotesForCluster = function(cluster) {
+    // init an array to hold our instances of Vex.Flow.StaveNote
+    var vexNotes = Array();
+
+    // for each note in a cluster, convert it to Vex.Flow.StaveNote
+    // and append to vexNotes array
+    for (var i = 0; i < cluster.length; i++) {
+      var n = new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" });
+      //var note = new Vex.Flow.StaveNote({
+          //keys: ['c/5'],
+          //duration: cluster[i]
+      //});
+      vexNotes.push(n);
+    }
+
+    return vexNotes;
+  };
+
+  this.render = function() {
+
+  };
+
+  //console.log(this.group.length);
 };
 
 // a raw, random cluster of eighth notes;
@@ -201,4 +224,7 @@ for (var i = 0; i < measure.group.length; i++) {
     console.log(measure.group[i].durations[j]);
   }
 }
+
+var notes = measure.getVexNotesForCluster(measure.group[0]);
+console.log(notes);
 
