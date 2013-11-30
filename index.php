@@ -4,6 +4,7 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>		
 	<script type="text/javascript" src="js/raphael-min.js"></script>	  
 	<script type="text/javascript" src="js/underscore-min.js"></script>
+	<script type="text/javascript" src="js/rhythmr-notation2.js"></script>
 <!-- 	<script type="text/javascript" src="js/vexflow-json.js"></script> -->
 	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 
