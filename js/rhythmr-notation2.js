@@ -1,12 +1,7 @@
 // a grouping of noteClusters adding up to one 4/4 measure
 function Measure() {
   this.numEights = 8; // number of eigth-notes remaining in measure
-  this.group = []; // group of NoteClusters for the measure
-
-  //this.getCluster = function() {
-    //var cluster = new NoteCluster(this.numEights)
-    //this.numEights -= 
-  //};
+  this.group = new Array(); // group of NoteClusters for the measure
 
   // fills measure with NoteClusters whose durations sum to 8
   // for ex., if there are 3 NoteClusters, their durations could
@@ -14,11 +9,14 @@ function Measure() {
   this.fill = function() {
     while (this.numEights > 0) {
       var cluster = new NoteCluster(this.numEights);
+      //console.log('cluster: ' + cluster);
       this.group.push(cluster.getCluster());
+      //console.log('cluster.length: ' + cluster.length);
       this.numEights -= cluster.length;
     };
   };
 
+  console.log(this.group.length);
 };
 
 // a raw, random cluster of eighth notes;
@@ -28,6 +26,9 @@ function NoteCluster(numNotes) {
   this.numNotes = numNotes;
   this.length = 0;
   this.durations = []; // NoteCluster refined into durations
+
+  // transform raw 8th-note clusters into duration values
+  // that are useable in Vex.Flow.StaveNote
 
   // possible combinations of durations for 1 eighth note
   this.notes1 = [
@@ -118,9 +119,8 @@ function NoteCluster(numNotes) {
     //update number of eighth notes in cluster
     this.length = numNotesToGrab; 
 
-    // transform raw 8th-note clusters into durations
-    // useable in Vex.Flow.StaveNote
     this.transform();
+
     return this;
   };
 
@@ -142,58 +142,63 @@ function NoteCluster(numNotes) {
         var randIndex = 
           Math.floor(this.notes2.length * Math.random());
         this.durations.push(this.notes2[randIndex]);
-        console.log('case2 randIndex: ' + randIndex);
+        //console.log('case2 randIndex: ' + randIndex);
         break;
       case 3:
         var randIndex = 
           Math.floor(this.notes3.length * Math.random());
         this.durations.push(this.notes3[randIndex]);
-        console.log('case3 randIndex: ' + randIndex);
+        //console.log('case3 randIndex: ' + randIndex);
         break;
       case 4:
         var randIndex = 
           Math.floor(this.notes4.length * Math.random());
         this.durations.push(this.notes4[randIndex]);
-        console.log('case4 randIndex: ' + randIndex);
+        //console.log('case4 randIndex: ' + randIndex);
         break;
       case 5:
         var randIndex = 
           Math.floor(this.notes5.length * Math.random());
         this.durations.push(this.notes5[randIndex]);
-        console.log('case5 randIndex: ' + randIndex);
+        //console.log('case5 randIndex: ' + randIndex);
         break;
       case 6:
         var randIndex = 
           Math.floor(this.notes6.length * Math.random());
         this.durations.push(this.notes6[randIndex]);
-        console.log('case6 randIndex: ' + randIndex);
+        //console.log('case6 randIndex: ' + randIndex);
         break;
       case 7:
         var randIndex = 
           Math.floor(this.notes7.length * Math.random());
         this.durations.push(this.notes7[randIndex]);
-        console.log('case7 randIndex: ' + randIndex);
+        //console.log('case7 randIndex: ' + randIndex);
         break;
       case 8:
         var randIndex = 
           Math.floor(this.notes8.length * Math.random());
         this.durations.push(this.notes8[randIndex]);
-        console.log('case8 randIndex: ' + randIndex);
+        //console.log('case8 randIndex: ' + randIndex);
         break;
     }
   };
-  
 };
 
 var measure = new Measure();
 measure.fill();
-console.log('measure.group.length: ' + measure.group.length);
-console.log('measure.group.length: ' + measure.group.length);
+//console.log('Number of NoteClusters: ' + measure.group.length);
+//for (var i = 0; i < measure.group.length; i++) {
+  //console.log('measure.group[' + i + '].length: ' 
+    //+ measure.group[i].length);
+//}
+
+console.log('how big is our array of NoteClusters? ' +
+  measure.group.length);
+
 for (var i = 0; i < measure.group.length; i++) {
-  console.log('measure.group[' + i + '].length: ' 
-    + measure.group[i].length);
+  for (var j = 0; j < measure.group[i].durations.length; j++) {
+    console.log('what are the values in group #' + i + '? ');
+    console.log(measure.group[i].durations[j]);
+  }
 }
-for (var i = 0; i < measure.clusters.length; i++) {
-  console.log('measure.group[' + i + '].length: ' 
-    + measure.group[i].length);
-}
+
