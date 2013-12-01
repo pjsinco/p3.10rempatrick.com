@@ -6,6 +6,7 @@
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 	<script type="text/javascript" src="js/rhythmr-notation2.js"></script>
+	<script type="text/javascript" src="js/vex-experiments.js"></script>
 <!-- 	<script type="text/javascript" src="js/vexflow-json.js"></script> -->
 
 <!-- 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>		 -->

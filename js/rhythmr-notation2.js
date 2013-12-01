@@ -1,7 +1,7 @@
-// a grouping of noteClusters adding up to one 4/4 measure
+// a grouping of NoteCluster objects adding up to one 4/4 measure
 function Measure() {
   this.numEights = 8; // number of eigth-notes remaining in measure
-  this.group = new Array(); // group of NoteClusters for the measure
+  this.group = new Array(); // array of NoteCluster objects
 
   // fills measure with NoteClusters whose durations sum to 8
   // for ex., if there are 3 NoteClusters, their durations could
@@ -10,9 +10,9 @@ function Measure() {
     while (this.numEights > 0) {
       var cluster = new NoteCluster(this.numEights);
       //console.log('cluster: ' + cluster);
-      this.group.push(cluster.getCluster());
+      this.group.push(cluster));
       //console.log('cluster.length: ' + cluster.length);
-      this.numEights -= cluster.length;
+      this.numEights -= cluster.size;
     };
   };
 
@@ -23,13 +23,20 @@ function Measure() {
 
     // for each note in a cluster, convert it to Vex.Flow.StaveNote
     // and append to vexNotes array
-    for (var i = 0; i < cluster.length; i++) {
-      var n = new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" });
+    for (var i = 0; i < cluster.durations.length; i++) {
+      console.log('inside getVexNotesForCluster for loop');
+      console.log('what is the length of this cluster.durations? ' + 
+        cluster.durations.length);
+      console.log('what is the value of cluster.durations[i]? ' + 
+        cluster.durations[i]);
+      console.log(cluster.durations[i]);
+      //var d = cluster.durations[i];
+      //var n = new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" });
       //var note = new Vex.Flow.StaveNote({
           //keys: ['c/5'],
           //duration: cluster[i]
       //});
-      vexNotes.push(n);
+      //vexNotes.push(n);
     }
 
     return vexNotes;
@@ -46,9 +53,16 @@ function Measure() {
 // count of notes is between 1 and number of eigth-notes still available
 // in the measure (numNotes)
 function NoteCluster(numNotes) { 
+  //instance variables
   this.numNotes = numNotes;
-  this.length = 0;
+  this.size = 0;
   this.durations = []; // NoteCluster refined into durations
+  
+  // generate a value between 1 and this.numNotes
+  this.numNotesToGrab = Math.floor(this.numNotes * Math.random() + 1);
+    
+  //update number of eighth notes in cluster
+  this.size = numNotesToGrab; 
 
   // transform raw 8th-note clusters into duration values
   // that are useable in Vex.Flow.StaveNote
@@ -60,7 +74,8 @@ function NoteCluster(numNotes) {
   
   // possible combinations of durations for 2 eighth notes
   this.notes2 = [
-    ['q'], ['8', '8']
+    ['q'], 
+    ['8', '8']
   ];
 
   // possible combinations of durations for 3 eighth notes
@@ -135,72 +150,64 @@ function NoteCluster(numNotes) {
     ['8', '8', '8', '8', '8', '8', '8', '8']
   ];
 
-  this.getCluster = function() {
-    // generate a value between 1 and this.numNotes
-    var numNotesToGrab = Math.floor(this.numNotes * Math.random() + 1);
-    
-    //update number of eighth notes in cluster
-    this.length = numNotesToGrab; 
+  /*
+   *instance methods
+   */
 
-    this.transform();
-
-    return this;
-  };
-
-  // randomly transform a cluster into a collection of durations
+  // randomly transform a cluster into a collection of durations;
   // for ex., the duration of a cluster of 3 eighth-notes could be:
   //    ['qd'], ['q', '8'], ['8', '8', '8']
   // duration notation is based on possible values for
-  // Vex.Flow.StaveNote.duration 
-  //   for ex.: 'q' = quarter-note
-  //            'd' = dotted
-  //            '8' = eighth-note
-  //            'h' = half-note
+  // Vex.Flow.StaveNote.duration:
+  //   'q' = quarter-note
+  //   'd' = dotted
+  //   '8' = eighth-note
+  //   'h' = half-note
   this.transform = function() {
-    switch(this.length) {
+    switch(this.size) {
       case 1:
-        this.durations.push(this.notes1[0]);
+        this.durations.push(this.notes1[0][0]);
         break;
       case 2:
         var randIndex = 
           Math.floor(this.notes2.length * Math.random());
-        this.durations.push(this.notes2[randIndex]);
+        this.durations.push(this.notes2[0][randIndex]);
         //console.log('case2 randIndex: ' + randIndex);
         break;
       case 3:
         var randIndex = 
           Math.floor(this.notes3.length * Math.random());
-        this.durations.push(this.notes3[randIndex]);
+        this.durations.push(this.notes3[0][randIndex]);
         //console.log('case3 randIndex: ' + randIndex);
         break;
       case 4:
         var randIndex = 
           Math.floor(this.notes4.length * Math.random());
-        this.durations.push(this.notes4[randIndex]);
+        this.durations.push(this.notes4[0][randIndex]);
         //console.log('case4 randIndex: ' + randIndex);
         break;
       case 5:
         var randIndex = 
           Math.floor(this.notes5.length * Math.random());
-        this.durations.push(this.notes5[randIndex]);
+        this.durations.push(this.notes5[0][randIndex]);
         //console.log('case5 randIndex: ' + randIndex);
         break;
       case 6:
         var randIndex = 
           Math.floor(this.notes6.length * Math.random());
-        this.durations.push(this.notes6[randIndex]);
+        this.durations.push(this.notes6[0][randIndex]);
         //console.log('case6 randIndex: ' + randIndex);
         break;
       case 7:
         var randIndex = 
           Math.floor(this.notes7.length * Math.random());
-        this.durations.push(this.notes7[randIndex]);
+        this.durations.push(this.notes7[0][randIndex]);
         //console.log('case7 randIndex: ' + randIndex);
         break;
       case 8:
         var randIndex = 
           Math.floor(this.notes8.length * Math.random());
-        this.durations.push(this.notes8[randIndex]);
+        this.durations.push(this.notes8[0][randIndex]);
         //console.log('case8 randIndex: ' + randIndex);
         break;
     }
@@ -215,16 +222,18 @@ measure.fill();
     //+ measure.group[i].length);
 //}
 
-console.log('how big is our array of NoteClusters? ' +
-  measure.group.length);
+
+//console.log('how big is our array of NoteClusters? ' +
+  //measure.group.length);
 
 for (var i = 0; i < measure.group.length; i++) {
   for (var j = 0; j < measure.group[i].durations.length; j++) {
-    console.log('what are the values in group #' + i + '? ');
-    console.log(measure.group[i].durations[j]);
+    //console.log('what are the values in group #' + i + '? ');
+    //console.log(measure.group[i].durations[j]);
   }
 }
 
+//console.log(measure.group[0]);
 var notes = measure.getVexNotesForCluster(measure.group[0]);
-console.log(notes);
+//console.log(notes);
 
