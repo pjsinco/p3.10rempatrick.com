@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 	<script type="text/javascript" src="js/measure.js"></script>
-	<script type="text/javascript" src="js/durations.js"></script>
+	<script type="text/javascript" src="js/possible-durations.js"></script>
 	<script type="text/javascript" src="js/notecluster.js"></script>
 <!-- 	<script type="text/javascript" src="js/vexflow-json.js"></script> -->
 
@@ -30,7 +30,7 @@
 
     <div id='tap'></div>
 
-    <canvas id='zero' width=700 height=100></canvas>
+    <canvas id='notation' width=700 height=100></canvas>
     <canvas id='one' width=700 height=100></canvas>
     <canvas id='two' width=700 height=100></canvas>
     <canvas id='three' width=700 height=100></canvas>
@@ -39,7 +39,7 @@
     <canvas id='six' width=700 height=100></canvas>
     <canvas id='seven' width=700 height=100></canvas>
 
-    <script>
+<!--    <script>
       var canvas = $('#one')[0];
       var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
       var ctx = renderer.getContext();
@@ -404,12 +404,13 @@
       tie2.setContext(ctx).draw();
       
     </script>
-
+-->
 
   <script>
     var measure = new Measure();
     measure.fill();
-    console.log('measure.group.length: ' + measure.group.length);
+    measure.render();
+    //console.log('measure.group.length: ' + measure.group.length);
   </script>
   <script type="text/javascript" src='js/metronome.js'></script>
   </body>

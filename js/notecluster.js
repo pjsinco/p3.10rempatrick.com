@@ -1,9 +1,11 @@
-// a raw, random cluster of eighth notes;
-// count of notes is between 1 and number of eigth-notes still available
-// in the measure (size)
+ /*
+  * a raw, random cluster of eighth notes;
+  * count of notes is between 1 and number of eigth-notes still available
+  * in the measure (size)
+  */
 function NoteCluster(size) { 
   //instance variables
-  this.durations = []; // NoteCluster refined into durations
+  this.durations = new Array(); // NoteCluster refined into durations
 
   // this cluster will have a random length between 1 and 
   // the size passed into the constructor
