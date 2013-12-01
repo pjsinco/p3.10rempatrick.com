@@ -1,5 +1,6 @@
 (function() {
 
+  // With help from:
   //https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
   //http://www.html5rocks.com/en/tutorials/webaudio/intro/
   //http://www.youtube.com/watch?v=1wYTkZVQKzs
@@ -8,8 +9,19 @@
   var context = new webkitAudioContext();
   var kick;
   var tempo = 120;
-  var quarterNoteTime = (tempo / 4) / 60;
-  var startTime;
+  var quarterNoteTime = (60 / tempo);
+  var startTime = 0.01;
+  //var expectedDuration = 
+
+  // amount of time before and after teh precise timing we'll allow
+  var graceInterval = 0.1;
+
+  // absolute timing of first tap of spacebar
+  var firstTap;
+  
+  function getCurrentTime() {
+    return context.currentTime;
+  }
 
   /*
    *LOAD SOUND
@@ -29,17 +41,35 @@
   };
   request.send();
 
-  $('#tap').click(function() {
-    //console.log('tapped');
-    console.log(startTime);
-    console.log(context.currentTime);
-    console.log(context.currentTime - startTime);
+  // prevent repeated ENTER presses from triggering multiple beat-plays
+  //help from:
+  //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
+  var allowed = true;
+
+  $(window).keypress(function(event) {
+    if (event.which == 32) {
+      event.preventDefault(); // disable scrolling
+      firstTap = getCurrentTime();
+      console.log('firstTap: ' + firstTap);
+      console.log('spacebar tapped');
+      console.log(context.currentTime - firstTap);
+      //console.log('startTime: ' + startTime);
+      //console.log('diff: ' + (context.currentTime - startTime));
+    };
   });
 
-  $(window).keydown(function() {
-    //console.log('startTime: ' + startTime);
-    //console.log('context.currentTime: ' + context.currentTime);
-    console.log('diff: ' + (context.currentTime - startTime));
+  $(document).keypress(function(event) {
+    if (!allowed) {
+      return;
+    } else {
+      if (event.which == 13) {
+        allowed = false;
+        startTime = context.currentTime;
+        for (var i = 0; i < 8; i++) {
+          playSound(kick, context.currentTime + (quarterNoteTime * i));
+        };
+      };
+    };
   });
 
 
@@ -59,6 +89,7 @@
       console.log(context.currentTime + (quarterNoteTime * i));
     }
   });
+
 
   $('#16beats').click(function() {
     startTime = context.currentTime;

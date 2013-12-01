@@ -24,9 +24,10 @@
   </head>
   <body>
     <h1>Rhythmr</h1>
-    <button id='4beats'>4 beats</button>
-    <button id='8beats'>8 beats</button>
-    <button id='16beats'>16 beats</button>
+<!--     <button id='4beats'>4 beats</button> -->
+<!--     <button id='8beats'>8 beats</button> -->
+<!--     <button id='16beats'>16 beats</button> -->
+    <p>Hit enter to start (count-in: 1 bar)</p>
 
     <div id='tap'></div>
 
