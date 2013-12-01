@@ -3,7 +3,7 @@
   */
 function Measure() {
   /*
-   * set up blank staff
+   * Set up blank staff
    */
   this.canvas = $('#notation')[0];
   this.renderer = 
@@ -13,13 +13,26 @@ function Measure() {
   this.stave.addClef('treble');
   this.stave.setContext(this.ctx).draw();
 
+  /*
+   * Set up other instance variables
+   */
   this.numEights = 8; // number of eigth-notes remaining in measure
   this.group = new Array(); // array of NoteCluster objects
   this.allNotes = new Array(); // array of Vex.Flow.StaveNote objects
 
-  // Fills measure with NoteClusters whose durations sum to 8;
-  // for ex., if there are 3 NoteClusters, their durations could
-  // be 2, 1, 5; if there are 4, durations could be 1, 1, 5, 1
+  // keep track of number of rest notes, measured in 8th-note values
+  this.restNotes = 0; 
+
+  /*
+   * Set up constants
+   */
+  this.MAX_REST_NOTES = 4;
+
+  /*
+   * Fills measure with NoteClusters whose durations sum to 8;
+   * for ex., if there are 3 NoteClusters, their durations could
+   * be 2, 1, 5; if there are 4, durations could be 1, 1, 5, 1
+   */
   this.fill = function() {
     // generate NoteCluster objects
     while (this.numEights > 0) {
@@ -38,6 +51,13 @@ function Measure() {
       // and make a new Vex.Flow.StaveNote
       for (var j = 0; j < this.group[i].durations.length; j++) {
         var dur = this.group[i].durations[j];
+
+        // randomly convert note to rest note
+        if (this.isRestNote(dur)) {
+          dur += 'r'; // adding an 'r' changes note to rest
+        }
+
+        // instantiate a new StaveNote object
         var note = new Vex.Flow.StaveNote({
           keys: ['b/4'],
           duration: dur
@@ -49,22 +69,53 @@ function Measure() {
         };
 
         this.allNotes.push(note);
-      }
-    }
-
-    console.log('Measure.allNotes.length: ' +
-      this.allNotes.length);
+      };
+    };
   };
 
+  //randomly generate rest notes based on a coin-flip
+  this.isRestNote = function(duration) {
+    if (this.restNotes < this.MAX_REST_NOTES) {
+      // generate a 0 or 1
+      var coinFlip = Math.floor(Math.random() * 2);
+      console.log("coinFlip: " + coinFlip);
+      if (coinFlip == 0) {
+      //if (Math.floor(Math.random() * 2) == 0) {
+        // we have rest, so appropriately increment tally of rest notes
+        switch (duration) {
+          case '8':
+            this.restNotes += 1;
+            break;
+          case 'q':
+            this.restNotes += 2;
+            break;
+          case 'qd':
+            this.restNotes += 3;
+            break;
+          case 'h':
+            this.restNotes += 4;
+            break;
+        }
+
+        return true; // note will be a rest
+      }
+    }
+  
+    return false;
+  }
+
   this.isDotted = function(duration) {
-    // we know there's a dot if the length of duration is more than 1;
-    // for ex., 'qd' instead of 'q'
-    return duration.length > 1;
+    //iterate through duration, checking for a 'd'
+    for (var i = 0; i < duration.length; i++) {
+      if (duration.charAt(i) == 'd') {
+        return true;
+      }
+    }
+    return false;
   }
 
   this.render = function(duration) {
-    Vex.Flow.Formatter.FormatAndDraw
-    (
+    Vex.Flow.Formatter.FormatAndDraw(
       this.ctx, this.stave, this.allNotes
     );
   };
