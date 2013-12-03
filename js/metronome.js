@@ -53,12 +53,8 @@
   $(window).keypress(function(event) {
     if (event.which == 32) {
       event.preventDefault(); // disable scrolling
-      firstTap = getCurrentTime();
-      console.log('firstTap: ' + firstTap);
-      console.log('spacebar tapped');
-      console.log(context.currentTime - firstTap);
-      //console.log('startTime: ' + startTime);
-      //console.log('diff: ' + (context.currentTime - startTime));
+      tapped = getCurrentTime();
+      console.log('tapped: ' + tapped);
     };
   });
 
