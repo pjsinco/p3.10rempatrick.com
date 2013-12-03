@@ -19,14 +19,18 @@ function Measure() {
   this.numEights = 8; // number of eigth-notes remaining in measure
   this.group = new Array(); // array of NoteCluster objects
   this.allNotes = new Array(); // array of Vex.Flow.StaveNote objects
-
-  // keep track of number of rest notes, measured in 8th-note values
-  this.restNotes = 0; 
+  this.tapTimings = new Array(); // array of timings of notes in measure
+  this.restNotes = 0; // # of rest notes, measured in 8th-note values
 
   /*
    * Set up constants
    */
-  this.MAX_REST_NOTES = 4;
+  this.HALF = 1.0; // duration in seconds of a half note, 120 bpm
+  this.DOTTED_QUARTER = 0.75; // duration in seconds of a dotted quarter
+  this.QUARTER = 0.5; // duration in secnds of a quarter note
+  this.EIGHTH = 0.25; // duration in secnds of a eighth note
+  this.COUNT = 4; // number of quarter notes in a count-in
+  this.MAX_REST_NOTES = 4; // max. number of rest notes allowed
 
   /*
    * Fills measure with NoteClusters whose durations sum to 8;
@@ -69,17 +73,32 @@ function Measure() {
         };
 
         this.allNotes.push(note);
+
+        //assign tap-timing of note
+        if (dur == 'h' || dur == 'hr') {
+          this.tapTimings.push(this.HALF);
+        } else if (dur == 'qd' || dur == 'qdr') {
+          this.tapTimings.push(this.DOTTED_QUARTER);
+        } else if (dur == 'q' || dur == 'qr') {
+          this.tapTimings.push(this.QUARTER);
+        } else {
+          this.tapTimings.push(this.EIGHTH);
+        };
       };
     };
+
+
+  console.log(this.tapTimings);
+  console.log(this.group);
+
+
   };
 
   //randomly generate rest notes based on a coin-flip
   this.isRestNote = function(duration) {
     if (this.restNotes < this.MAX_REST_NOTES) {
       // generate a 0 or 1
-      var coinFlip = Math.floor(Math.random() * 2);
-      console.log("coinFlip: " + coinFlip);
-      if (coinFlip == 0) {
+      if (Math.floor(Math.random() * 2) == 0) {
       //if (Math.floor(Math.random() * 2) == 0) {
         // we have rest, so appropriately increment tally of rest notes
         switch (duration) {
@@ -119,6 +138,23 @@ function Measure() {
       this.ctx, this.stave, this.allNotes
     );
   };
-};
+
+  // helper method to translate notes into tap timings,
+  // measured in seconds
+  this.calculateTapTimings = function() {
+    console.log('inside calculateTapTimings()');
+    console.log('this.group.length: ' + this.group.length);
+    console.log('this.group[0].durations.length: ' + 
+      this.group[0].durations.length);
+    // itereate through all of the NoteCluster objects
+    for (var i = 0; i < this.group.length; i++) {
+      for (var j = 0; j < this.group[i].durations.length; i++) {
+        console.log(this.group[i].durations[j]);
+      };
+    };
+  };
+
+}; //eoc
+
 
 

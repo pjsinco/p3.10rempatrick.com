@@ -13,11 +13,15 @@
   var startTime = 0.01;
   //var expectedDuration = 
 
+
   // amount of time before and after teh precise timing we'll allow
   var graceInterval = 0.1;
 
   // absolute timing of first tap of spacebar
   var firstTap;
+
+  var SPACEBAR = 32; // character code
+  var ENTER_KEY = 13; // character code
   
   function getCurrentTime() {
     return context.currentTime;
