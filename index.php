@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<script type="text/javascript" src="js/jquery.min.js"></script>		
-<!-- 	<script type="text/javascript" src="js/raphael-min.js"></script>	   -->
-<!-- 	<script type="text/javascript" src="js/underscore-min.js"></script> -->
-	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
-	<script type="text/javascript" src="js/measure.js"></script>
-	<script type="text/javascript" src="js/possible-durations.js"></script>
-	<script type="text/javascript" src="js/notecluster.js"></script>
 <!-- 	<script type="text/javascript" src="js/vexflow-json.js"></script> -->
 
 <!-- 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>		 -->
@@ -23,7 +16,7 @@
     </style>
   </head>
   <body>
-    <h1>Rhythmr</h1>
+    <h1>Krupa</h1>
 <!--     <button id='4beats'>4 beats</button> -->
 <!--     <button id='8beats'>8 beats</button> -->
 <!--     <button id='16beats'>16 beats</button> -->
@@ -31,14 +24,17 @@
 
 <!--     <div id='tap'></div> -->
 
-    <canvas id='notation' width=700 height=100></canvas>
-    <canvas id='one' width=700 height=100></canvas>
-    <canvas id='two' width=700 height=100></canvas>
-    <canvas id='three' width=700 height=100></canvas>
-    <canvas id='four' width=700 height=100></canvas>
-    <canvas id='five' width=700 height=100></canvas>
-    <canvas id='six' width=700 height=100></canvas>
-    <canvas id='seven' width=700 height=100></canvas>
+    <canvas id='notation' width=700 height=100></canvas><br>
+
+    <button id='next'>Next measure</button>
+
+<!--     <canvas id='one' width=700 height=100></canvas> -->
+<!--     <canvas id='two' width=700 height=100></canvas> -->
+<!--     <canvas id='three' width=700 height=100></canvas> -->
+<!--     <canvas id='four' width=700 height=100></canvas> -->
+<!--     <canvas id='five' width=700 height=100></canvas> -->
+<!--     <canvas id='six' width=700 height=100></canvas> -->
+<!--     <canvas id='seven' width=700 height=100></canvas> -->
 
 <!--    <script>
       var canvas = $('#one')[0];
@@ -407,12 +403,19 @@
     </script>
 -->
 
+	<script type="text/javascript" src="js/jquery.min.js"></script>		
+<!-- 	<script type="text/javascript" src="js/raphael-min.js"></script>	   -->
+<!-- 	<script type="text/javascript" src="js/underscore-min.js"></script> -->
+	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
+	<script type="text/javascript" src="js/measure.js"></script>
+	<script type="text/javascript" src="js/possible-durations.js"></script>
+	<script type="text/javascript" src="js/notecluster.js"></script>
+  <script type="text/javascript" src='js/metronome.js'></script>
   <script>
     var measure = new Measure();
     measure.fill();
     measure.render();
     //console.log('measure.group.length: ' + measure.group.length);
   </script>
-  <script type="text/javascript" src='js/metronome.js'></script>
   </body>
 </html>

@@ -7,13 +7,14 @@
 (function() {
   var context = new webkitAudioContext();
   var kick;
-  var tempo = 100;
+  var tempo = 120;
   var quarterNoteTime = (60 / tempo);
-  var startTime = 0.01;
-  //var expectedDuration = 
+  var startTime;
+  var tapDown, tapUp; // track timing of tap
+  // helps prevent recording auto-repeat when key is held down
+  var keyAllowed = true; 
 
-
-  // amount of time before and after teh precise timing we'll allow
+  // amount of time before and after the precise timing we'll allow
   var graceInterval = 0.1;
 
   // absolute timing of first tap of spacebar
@@ -27,7 +28,7 @@
   }
 
   /*
-   *LOAD SOUND
+   *LOAD KICK
    */
   var request = new XMLHttpRequest();
   request.open('get', 'sounds/kick.wav', true);
@@ -44,25 +45,35 @@
   };
   request.send();
 
+  $('#next').click(function() {
+    location.reload();
+  });
+
   // prevent repeated ENTER presses from triggering multiple beat-plays
   //help from:
   //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
 
-
-
-
-  // helps prevent recording auto-repeat when key is held down
-  var keyAllowed = true; 
-  var tapDown, tapUp; // track timing of tap
   $(window).keydown(function(event) {
-    if (event.which == SPACEBAR && keyAllowed) {
+    if (event.which != ENTER_KEY) {
       event.preventDefault(); // disable scrolling
+    };
+    if (event.which == SPACEBAR && keyAllowed) {
       tapDown = getCurrentTime();
-      console.log('tapDown: ' + tapDown);
+      if (tapDownIsCorrect(tapDown)) {
+
+      };
+      //console.log('abs tapDown: ' + tapDown);
+      //console.log('starttime spacebar: ' + startTime);
+      console.log('rounded tapped: ' + (tapDown - startTime));
       keyAllowed = false;
     };
   });
 
+  function tapDownIsCorrect(timing) {
+    console.log('timing: ' + timing);
+    return true;
+  }
+  
   $(window).keyup(function(event) {
     if (event.which == SPACEBAR) {
       tapUp = getCurrentTime();
@@ -72,96 +83,30 @@
     };
   });
 
-
-
-
-  //$(window).keypress(function(event) {
-  //  if (event.which == 32) {
-  //    event.preventDefault(); // disable scrolling
-  //    tapped = getCurrentTime();
-  //    console.log('tapped: ' + tapped);
-  //  };
-  //});
-
   var beatAllowed = true;
   $(document).keypress(function(event) {
-    
     if (!beatAllowed) {
-      return;
+      return; 
     } else {
       if (event.which == ENTER_KEY) {
-        beatAllowed = false;
+        // prevent more than one beat from playing at a time
+        beatAllowed = false; 
         startTime = context.currentTime;
+        console.log('starttime: ' + startTime);
         for (var i = 0; i < 8; i++) {
-          playSound(kick, context.currentTime + 
-            (quarterNoteTime * i));
+          playSound(kick, context.currentTime + (quarterNoteTime * i));
         };
+
+        // allow ENTER to start the beat again
         (function(){
           window.setTimeout(function() {
-            beatAllowed = true;
+            beatAllowed = true; 
           }, 4000);
         })();
       };
     };
   });
 
-
-  //$(window).keydown(function() {
-  $('#4beats').click(function() {
-    startTime = context.currentTime;
-    for (var i = 0; i < 4; i++) {
-      playSound(kick, context.currentTime + (quarterNoteTime * i));
-      console.log(context.currentTime + (quarterNoteTime * i));
-    }
-  });
-
-  $('#8beats').click(function() {
-    startTime = context.currentTime;
-    for (var i = 0; i < 8; i++) {
-      playSound(kick, context.currentTime + (quarterNoteTime * i));
-      console.log(context.currentTime + (quarterNoteTime * i));
-    }
-  });
-
-
-  $('#16beats').click(function() {
-    startTime = context.currentTime;
-    for (var i = 0; i < 16; i++) {
-      playSound(kick, context.currentTime + (quarterNoteTime * i));
-      console.log(context.currentTime + (quarterNoteTime * i));
-    }
-  });
-
-  //$(window).keyup(function() {
-    //allowed = true;
-  //});
-
-  /*
-   *ADD EVENT LISTENER
-   */
-  //$(window).keydown(function() {
-  //    //console.log(event.timeStamp);
-  //    for (var i = 0; i < 4; i++) {
-  //      playSound(kick, context.currentTime + (quarterNoteTime * i));
-  //      console.log(context.currentTime + (quarterNoteTime * i));
-  //    }
-  //});
-
-      //playSound(kick, 0)
-
-      //for (var bar = 0; bar < 2; bar++) {
-      //  var time = context.currentTime + bar * 8 * eighthNoteTime;
-      //  playSound(kick, time);
-      //  playSound(kick, time + 4 * eighthNoteTime);
-      //}
-  //});
-
-  function playTenPerSecond() {
-    var time = 0;
-    for (var i = 0; i < 10; i += 0.1) {
-      playSound(kick, time + i);
-    }    
-  }
 
   function playSound(buffer, time) {
     // the 4 lines of code needed to play a kick
@@ -170,8 +115,6 @@
     source.connect(context.destination);
     source.start(time);
   }
-  
-  
 
   function onKeyDown() {
     //NOTE: we need all 4 lines of code each time we want to play a kick
@@ -184,9 +127,6 @@
     source.connect(context.destination);
     //play kick
     source.start(0);
-
   }
-
-  
 
 })();
