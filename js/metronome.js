@@ -5,7 +5,8 @@
   //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
 (function() {
-  var context = new webkitAudioContext();
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  var context = new AudioContext();
   var kick;
   var tempo = 120;
   var quarterNoteTime = (60 / tempo);
