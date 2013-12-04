@@ -1,106 +1,80 @@
+function Beat() {
+
   // With help from:
   //https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
   //http://www.html5rocks.com/en/tutorials/webaudio/intro/
   //http://www.youtube.com/watch?v=1wYTkZVQKzs
   //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
-(function() {
-  var context = new webkitAudioContext();
-  var kick;
-  var tempo = 100;
-  var quarterNoteTime = (60 / tempo);
-  var startTime = 0.01;
-  //var expectedDuration = 
-
-
-  // amount of time before and after teh precise timing we'll allow
-  var graceInterval = 0.1;
-
-  // absolute timing of first tap of spacebar
-  var firstTap;
-
-  var SPACEBAR = 32; // character code
-  var ENTER_KEY = 13; // character code
-  
-  function getCurrentTime() {
-    return context.currentTime;
-  }
+  this.context = new webkitAudioContext();
+  this.kick;
 
   /*
    *LOAD SOUND
    */
-  var request = new XMLHttpRequest();
-  request.open('get', 'sounds/kick.wav', true);
-  request.responseType = 'arraybuffer'; //get raw binary data, not text
-  //set up what we do with onload once it's finished loading
-  request.onload = function() {
-    //pass decoder response from request; 
-    //for the callback, pass in buffer, which is what has just loaded
-    //(is buffer what is returned from decodeAudioData()?)
-    context.decodeAudioData(request.response, function(buffer) {
-      //decode audio and store in a variable so we can refer back to it
-      kick = buffer;
+  this.loadSound = function(filename) {
+    $(document).ready(function() {
+      var sound;
+      var request = new XMLHttpRequest();
+      request.open('get', 'sounds/' + filename, true);
+      request.responseType = 'arraybuffer'; //get raw binary data, not text
+      //set up what we do with onload once it's finished loading
+      request.onload = function() {
+        //pass decoder response from request; 
+        //for the callback, pass in buffer, which is what has just loaded
+        //(is buffer what is returned from decodeAudioData()?)
+        this.context.decodeAudioData(request.response, function(buffer) {
+          //decode audio and store in a variable so we can refer back to it
+          sound = buffer;
+        });
+      };
+      request.send();
+      return sound;
     });
   };
-  request.send();
+  
+  this.kick = this.loadSound('kick.wav');
+  this.tempo = 120;
+  this.quarterNoteTime = (60 / this.tempo);
 
   // prevent repeated ENTER presses from triggering multiple beat-plays
   //help from:
   //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
+  this.allowed = true;
+
+  // amount of time before and after teh precise timing we'll allow
+  this.graceInterval = 0.1;
+
+  // absolute timing of first tap of spacebar
+  this.firstTap;
+
+  this.SPACEBAR = 32; // character code
+  this.ENTER_KEY = 13; // character code
+  
+  this.getCurrentTime = function() {
+    return this.context.currentTime;
+  }
 
 
-
-
-  // helps prevent recording auto-repeat when key is held down
-  var keyAllowed = true; 
-  var tapDown, tapUp; // track timing of tap
-  $(window).keydown(function(event) {
-    if (event.which == SPACEBAR && keyAllowed) {
+  
+  $(window).keypress(function(event) {
+    if (event.which == 32) {
       event.preventDefault(); // disable scrolling
-      tapDown = getCurrentTime();
-      console.log('tapDown: ' + tapDown);
-      keyAllowed = false;
+      tapped = getCurrentTime();
+      console.log('tapped: ' + tapped);
     };
   });
 
-  $(window).keyup(function(event) {
-    if (event.which == SPACEBAR) {
-      tapUp = getCurrentTime();
-      //console.log('tapUp: ' + tapUp);
-      keyAllowed = true;
-      console.log('tap duration: ' + (tapUp - tapDown));
-    };
-  });
-
-
-
-
-  //$(window).keypress(function(event) {
-  //  if (event.which == 32) {
-  //    event.preventDefault(); // disable scrolling
-  //    tapped = getCurrentTime();
-  //    console.log('tapped: ' + tapped);
-  //  };
-  //});
-
-  var beatAllowed = true;
   $(document).keypress(function(event) {
-    
-    if (!beatAllowed) {
+    if (!allowed) {
       return;
     } else {
-      if (event.which == ENTER_KEY) {
-        beatAllowed = false;
+      if (event.which == 13) {
+        allowed = false;
         startTime = context.currentTime;
         for (var i = 0; i < 8; i++) {
-          playSound(kick, context.currentTime + 
-            (quarterNoteTime * i));
+          playSound(kick, context.currentTime + (quarterNoteTime * i));
         };
-        (function(){
-          window.setTimeout(function() {
-            beatAllowed = true;
-          }, 4000);
-        })();
       };
     };
   });
@@ -189,4 +163,4 @@
 
   
 
-})();
+};

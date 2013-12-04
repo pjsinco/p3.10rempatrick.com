@@ -2,8 +2,8 @@
 <html>
   <head>
 	<script type="text/javascript" src="js/jquery.min.js"></script>		
-	<script type="text/javascript" src="js/raphael-min.js"></script>	  
-	<script type="text/javascript" src="js/underscore-min.js"></script>
+<!-- 	<script type="text/javascript" src="js/raphael-min.js"></script>	   -->
+<!-- 	<script type="text/javascript" src="js/underscore-min.js"></script> -->
 	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 	<script type="text/javascript" src="js/measure.js"></script>
 	<script type="text/javascript" src="js/possible-durations.js"></script>
@@ -29,7 +29,7 @@
 <!--     <button id='16beats'>16 beats</button> -->
     <p>Hit enter to start (count-in: 1 bar)</p>
 
-    <div id='tap'></div>
+<!--     <div id='tap'></div> -->
 
     <canvas id='notation' width=700 height=100></canvas>
     <canvas id='one' width=700 height=100></canvas>
