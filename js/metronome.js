@@ -19,9 +19,11 @@
 
   // absolute timing of first tap of spacebar
   var firstTap;
+  var tapCount = 0; // track # of times user taps spacebar
 
   var SPACEBAR = 32; // character code
   var ENTER_KEY = 13; // character code
+  var DECIMAL_PLACES = 2; // how tightly we'll track timing
   
   function getCurrentTime() {
     return context.currentTime;
@@ -59,18 +61,22 @@
     };
     if (event.which == SPACEBAR && keyAllowed) {
       tapDown = getCurrentTime();
-      if (tapDownIsCorrect(tapDown)) {
-
+      if (tapDownIsCorrect(tapDown - startTime)) {
+        console.log(' expected: ' + measure.tapTimings[tapCount]);
       };
+      tapCount++; // increment tap count
       //console.log('abs tapDown: ' + tapDown);
       //console.log('starttime spacebar: ' + startTime);
-      console.log('rounded tapped: ' + (tapDown - startTime));
+      console.log(' tapped: ' + 
+        (tapDown - startTime).toFixed(DECIMAL_PLACES));
       keyAllowed = false;
     };
   });
 
   function tapDownIsCorrect(timing) {
-    console.log('timing: ' + timing);
+    console.log('diff: ' + 
+      Math.abs(measure.tapTimings[tapCount] - 
+      timing).toFixed(DECIMAL_PLACES));
     return true;
   }
   
@@ -79,7 +85,8 @@
       tapUp = getCurrentTime();
       //console.log('tapUp: ' + tapUp);
       keyAllowed = true;
-      console.log('tap duration: ' + (tapUp - tapDown));
+      console.log(' tap duration: ' + 
+        (tapUp - tapDown).toFixed(DECIMAL_PLACES));
     };
   });
 
@@ -91,6 +98,7 @@
       if (event.which == ENTER_KEY) {
         // prevent more than one beat from playing at a time
         beatAllowed = false; 
+        tapCount = 0; // reset tapCount
         startTime = context.currentTime;
         console.log('starttime: ' + startTime);
         for (var i = 0; i < 8; i++) {

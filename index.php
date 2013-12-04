@@ -404,8 +404,6 @@
 -->
 
 	<script type="text/javascript" src="js/jquery.min.js"></script>		
-<!-- 	<script type="text/javascript" src="js/raphael-min.js"></script>	   -->
-<!-- 	<script type="text/javascript" src="js/underscore-min.js"></script> -->
 	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
 	<script type="text/javascript" src="js/measure.js"></script>
 	<script type="text/javascript" src="js/possible-durations.js"></script>
