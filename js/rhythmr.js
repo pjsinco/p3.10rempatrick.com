@@ -24,7 +24,7 @@
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
   // amount of time before and after the precise timing we'll allow
-  var GRACE = 0.15;
+  var GRACE = 0.12;
   
   function getCurrentTime() {
     return context.currentTime;
@@ -65,15 +65,6 @@
     };
     if (event.which == SPACEBAR && keyAllowed) {
       tapDown = getCurrentTime();
-      if (tapDownIsCorrect(tapDown - startTime)) {
-        $('#results').append('<p>Yep</p>');
-        console.log('good');
-        //console.log(' expected: ' + measure.tapTimings[tapCount]);
-      } else {
-        $('#results').append('<p>Nope</p>');
-        console.log('bad');
-      };
-      tapCount++; // increment tap count
       //console.log('abs tapDown: ' + tapDown);
       //console.log('starttime spacebar: ' + startTime);
       console.log(' tapped: ' + 
@@ -84,15 +75,41 @@
 
   $(window).keyup(function(event) {
     if (event.which == SPACEBAR) {
+      //console.log('tapCount: ' + tapCount);
+      //console.log(' startTime: ' + startTime);
+      //console.log(' tapdown: ' + tapDown);
+      //console.log(' tapdown - startTime: ' + (tapDown - startTime));
       tapUp = getCurrentTime();
+      var duration = (tapUp - tapDown).toFixed(DECIMAL_PLACES);
+      //console.log(' tapup: ' + tapUp);
+      if (tapDownIsCorrect(tapDown - startTime) & 
+          tapDurationIsCorrect(duration)) {
+        $('#results').append('<p>Yep</p>');
+        //console.log('good');
+        //console.log(' expected: ' + measure.tapTimings[tapCount]);
+      } else {
+        $('#results').append('<p>Nope</p>');
+        //console.log('bad');
+      };
       //console.log('tapUp: ' + tapUp);
       keyAllowed = true;
-      console.log(' tap duration: ' + 
-        (tapUp - tapDown).toFixed(DECIMAL_PLACES));
+      tapCount++; // increment tap count
+      //console.log(' tap duration: ' + 
+        //((tapUp - tapDown).toFixed(DECIMAL_PLACES)));
     };
   });
 
+  function inCountIn() {
+    
+  }
+
+  function tapDurationIsCorrect(duration) {
+    return true;
+  };
+
   function tapDownIsCorrect(timing) {
+    console.log('  inside tapDownIsCorrect; timing: ' + timing);
+    console.log('  compare to: ' + measure.tapTimings[tapCount]);
     var timingDiff = Math.abs(measure.tapTimings[tapCount] -
       timing).toFixed(DECIMAL_PLACES);
     if (timingDiff <= GRACE ) {
@@ -119,6 +136,8 @@
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
+        $('#notation').css('opacity', '0.0'); // make staff disappear ...
+        $('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
         $('#results').html(''); // reset feedback zone
         console.log('starttime: ' + startTime);
         for (var i = 0; 
@@ -135,6 +154,12 @@
             beatAllowed = true; 
           }, quarterNoteTime * 
             (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
+        })();
+  
+        (function(){
+          window.setTimeout(function() {
+            $('#notation').css('opacity', '1.0')
+          }, quarterNoteTime * measure.COUNT_IN * 1000);
         })();
       };
     };
