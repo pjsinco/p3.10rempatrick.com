@@ -31,6 +31,7 @@ function Measure() {
   this.group = new Array(); // array of NoteCluster objects
   this.allNotes = new Array(); // of Vex.Flow.StaveNote objects
   this.tapTimings = new Array(); // schedule of expected taps 
+  this.tapDurations = new Array(); // schedule of expected taps 
   this.restNotes = 0; // # of rest notes, measured in 8th-note values
   this.timeElapsed = this.COUNT_IN * this.QUARTER; 
     // track how many seconds have elapsed in measure;
@@ -79,7 +80,7 @@ function Measure() {
         this.allNotes.push(note);
 
         //update tapTimings based on this note
-        this.calculateTapTiming(dur);
+        this.processTapTiming(dur);
       };
     };
   console.log(this.tapTimings);
@@ -133,26 +134,30 @@ function Measure() {
 
   // helper method to translate notes into tap timings,
   // measured in seconds
-  this.calculateTapTiming = function(dur) {
+  this.processTapTiming = function(dur) {
 
     if (dur == 'h' || dur == 'hr') {
       if (dur == 'h') {
         this.tapTimings.push(this.timeElapsed);
+        this.tapDurations.push(this.HALF);
       };
       this.timeElapsed += this.HALF;
     } else if (dur == 'qd' || dur == 'qdr') {
       if (dur == 'qd') {
         this.tapTimings.push(this.timeElapsed);
+        this.tapDurations.push(this.DOTTED_QUARTER);
       };
       this.timeElapsed += this.DOTTED_QUARTER;
     } else if (dur == 'q' || dur == 'qr') {
       if (dur == 'q') {
         this.tapTimings.push(this.timeElapsed);
+        this.tapDurations.push(this.QUARTER);
       };
       this.timeElapsed += this.QUARTER;
     } else {
       if (dur == '8') {
         this.tapTimings.push(this.timeElapsed);
+        this.tapDurations.push(this.EIGHTH);
       };
       this.timeElapsed += this.EIGHTH;
     };

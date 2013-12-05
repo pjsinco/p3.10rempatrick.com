@@ -414,12 +414,12 @@
 	<script type="text/javascript" src="js/measure.js"></script>
 	<script type="text/javascript" src="js/possible-durations.js"></script>
 	<script type="text/javascript" src="js/notecluster.js"></script>
-  <script type="text/javascript" src='js/rhythmr.js'></script>
   <script>
     var measure = new Measure();
     measure.fill();
     measure.render();
     //console.log('measure.group.length: ' + measure.group.length);
   </script>
+  <script type="text/javascript" src='js/rhythmr.js'></script>
   </body>
 </html>

@@ -1,6 +1,7 @@
   // With help from:
   //https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
   //http://www.html5rocks.com/en/tutorials/webaudio/intro/
+  //http://www.html5rocks.com/en/tutorials/audio/scheduling/
   //http://www.youtube.com/watch?v=1wYTkZVQKzs
   //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
@@ -24,8 +25,14 @@
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
   // amount of time before and after the precise timing we'll allow
-  var GRACE = 0.12;
-  
+  var GRACE_TAP_TIME = 0.12;
+  var GRACE_DURATION_TIME = 0.33;
+
+
+  console.log(' expedted tapDuations: ' + measure.tapDurations);
+
+
+
   function getCurrentTime() {
     return context.currentTime;
   }
@@ -108,15 +115,33 @@
   }
 
   function tapDurationIsCorrect(duration) {
-    return true;
+    // calculate difference between expected duration and user's duration
+    var durationDiff = Math.abs(measure.tapDurations[tapCount] -
+      duration).toFixed(DECIMAL_PLACES);
+    //console.log(' durationDiff: ' + durationDiff);    
+    
+    // anything smaller than a quarter note will pass for an eighth
+    if (durationDiff <= GRACE_DURATION_TIME) {
+      console.log('  duration: good');
+      console.log('  durationDiff: ' + durationDiff);
+      console.log('  duration: ' + duration);
+      console.log('  expected: ' + measure.tapDurations[tapCount]);
+      return true;
+    } else {
+      console.log('  duration: bad');
+      console.log('  durationDiff: ' + durationDiff);
+      console.log('  duration: ' + duration);
+      console.log('  expected: ' + measure.tapDurations[tapCount]);
+      return false;
+    }
   };
 
   function tapDownIsCorrect(timing) {
-    console.log('  inside tapDownIsCorrect; timing: ' + timing);
-    console.log('  compare to: ' + measure.tapTimings[tapCount]);
+    //console.log('  inside tapDownIsCorrect; timing: ' + timing);
+    //console.log('  compare to: ' + measure.tapTimings[tapCount]);
     var timingDiff = Math.abs(measure.tapTimings[tapCount] -
       timing).toFixed(DECIMAL_PLACES);
-    if (timingDiff <= GRACE ) {
+    if (timingDiff <= GRACE_TAP_TIME ) {
       return true;
     };
     
@@ -128,7 +153,7 @@
   }
   
   /*
-   *user is starting the beat
+   * User is starting the beat
    */
   var beatAllowed = true;
   $(document).keypress(function(event) {
@@ -140,8 +165,8 @@
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
-        $('#notation').css('opacity', '0.0'); // make staff disappear ...
-        $('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
+        //$('#notation').css('opacity', '0.0'); // make staff disappear ...
+        //$('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
         $('#results').html(''); // reset feedback zone
         console.log('starttime: ' + startTime);
         for (var i = 0; 
@@ -160,11 +185,11 @@
             (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
         })();
   
-        (function(){
-          window.setTimeout(function() {
-            $('#notation').css('opacity', '1.0')
-          }, quarterNoteTime * measure.COUNT_IN * 1000);
-        })();
+        //(function(){
+          //window.setTimeout(function() {
+            //$('#notation').css('opacity', '1.0')
+          //}, quarterNoteTime * measure.COUNT_IN * 1000);
+        //})();
       };
     };
   });
