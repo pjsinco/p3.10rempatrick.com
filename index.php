@@ -31,7 +31,7 @@
     <div class='tap-feedback' id='correct'></div>
     <div class='tap-feedback' id='incorrect'></div><br>
 
-    <button id='next'>Next measure</button><br>
+    <button id='next'>New measure</button><br>
     <div id='results'></div>
 
 <!--     <canvas id='one' width=700 height=100></canvas> -->

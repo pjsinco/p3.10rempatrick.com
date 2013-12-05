@@ -48,6 +48,7 @@
   };
   request.send();
 
+  // load a new measure
   $('#next').click(function() {
     location.reload();
   });
@@ -57,7 +58,7 @@
   //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
 
   /*
-   *user is tapping
+   * User starts a tap
    */
   $(window).keydown(function(event) {
     if (event.which == SPACEBAR) {
@@ -73,6 +74,9 @@
     };
   });
 
+  /*
+   * User ends a tap
+   */
   $(window).keyup(function(event) {
     if (event.which == SPACEBAR) {
       //console.log('tapCount: ' + tapCount);
@@ -82,7 +86,7 @@
       tapUp = getCurrentTime();
       var duration = (tapUp - tapDown).toFixed(DECIMAL_PLACES);
       //console.log(' tapup: ' + tapUp);
-      if (tapDownIsCorrect(tapDown - startTime) & 
+      if (tapDownIsCorrect(tapDown - startTime) &&
           tapDurationIsCorrect(duration)) {
         $('#results').append('<p>Yep</p>');
         //console.log('good');
