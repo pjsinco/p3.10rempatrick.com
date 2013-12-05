@@ -15,8 +15,6 @@
   // helps prevent recording auto-repeat when key is held down
   var keyAllowed = true; 
 
-  // amount of time before and after the precise timing we'll allow
-  var graceInterval = 0.1;
 
   // absolute timing of first tap of spacebar
   var firstTap;
@@ -25,6 +23,8 @@
   var SPACEBAR = 32; // character code
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
+  // amount of time before and after the precise timing we'll allow
+  var GRACE = 0.2;
   
   function getCurrentTime() {
     return context.currentTime;
@@ -56,14 +56,22 @@
   //help from:
   //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
 
+  /*
+   *user is tapping
+   */
   $(window).keydown(function(event) {
-    if (event.which != ENTER_KEY) {
+    if (event.which == SPACEBAR) {
       event.preventDefault(); // disable scrolling
     };
     if (event.which == SPACEBAR && keyAllowed) {
       tapDown = getCurrentTime();
       if (tapDownIsCorrect(tapDown - startTime)) {
-        console.log(' expected: ' + measure.tapTimings[tapCount]);
+        $('#feedback').append('<p>Yep</p>');
+        console.log('good');
+        //console.log(' expected: ' + measure.tapTimings[tapCount]);
+      } else {
+        $('#feedback').append('<p>Nope</p>');
+        console.log('bad');
       };
       tapCount++; // increment tap count
       //console.log('abs tapDown: ' + tapDown);
@@ -74,13 +82,6 @@
     };
   });
 
-  function tapDownIsCorrect(timing) {
-    console.log('diff: ' + 
-      Math.abs(measure.tapTimings[tapCount] - 
-      timing).toFixed(DECIMAL_PLACES));
-    return true;
-  }
-  
   $(window).keyup(function(event) {
     if (event.which == SPACEBAR) {
       tapUp = getCurrentTime();
@@ -91,6 +92,23 @@
     };
   });
 
+  function tapDownIsCorrect(timing) {
+    var timingDiff = Math.abs(measure.tapTimings[tapCount] -
+      timing).toFixed(DECIMAL_PLACES);
+    if (timingDiff < 0.2) {
+      return true;
+    };
+    
+    return false;
+    //console.log('diff: ' + 
+      //Math.abs(measure.tapTimings[tapCount] - 
+      //timing).toFixed(DECIMAL_PLACES));
+
+  }
+  
+  /*
+   *user is starting the beat
+   */
   var beatAllowed = true;
   $(document).keypress(function(event) {
     if (!beatAllowed) {
@@ -101,41 +119,33 @@
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
+        $('#feedback').html(''); // reset feedback zone
         console.log('starttime: ' + startTime);
-        for (var i = 0; i < 8; i++) {
+        for (var i = 0; 
+          i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
+          i++) {
+          // schedule the kick drum hits
           playSound(kick, context.currentTime + (quarterNoteTime * i));
         };
 
-        // allow ENTER to start the beat again
+
+        // allow ENTER to start the beat again after beat has played
         (function(){
           window.setTimeout(function() {
             beatAllowed = true; 
-          }, 4000);
+          }, quarterNoteTime * 
+            (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
         })();
       };
     };
   });
-
-
+  
   function playSound(buffer, time) {
     // the 4 lines of code needed to play a kick
     var source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);
     source.start(time);
-  }
-
-  function onKeyDown() {
-    //NOTE: we need all 4 lines of code each time we want to play a kick
-
-    // initialize a new kick
-    var source = context.createBufferSource();
-    //attach audio data to playSound as its buffer
-    source.buffer = kick;
-    //link source to destination, which is our output
-    source.connect(context.destination);
-    //play kick
-    source.start(0);
   }
 
 })();

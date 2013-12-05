@@ -16,17 +16,18 @@
     </style>
   </head>
   <body>
-    <h1>Krupa</h1>
+    <h1>Rhythmr</h1>
 <!--     <button id='4beats'>4 beats</button> -->
 <!--     <button id='8beats'>8 beats</button> -->
 <!--     <button id='16beats'>16 beats</button> -->
-    <p>Hit enter to start (count-in: 1 bar)</p>
+    <p><strong>Tap the rhythm using the spacebar.</strong> Press enter to start (count-in: 1 bar)</p>
 
 <!--     <div id='tap'></div> -->
 
     <canvas id='notation' width=700 height=100></canvas><br>
 
-    <button id='next'>Next measure</button>
+    <button id='next'>Next measure</button><br>
+    <div id='feedback'></div>
 
 <!--     <canvas id='one' width=700 height=100></canvas> -->
 <!--     <canvas id='two' width=700 height=100></canvas> -->

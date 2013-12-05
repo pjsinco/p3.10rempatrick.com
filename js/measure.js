@@ -22,6 +22,7 @@ function Measure() {
   this.EIGHTH = 0.25; // duration in secnds of a eighth note
   this.COUNT_IN = 4; // number of quarter notes in a count-in
   this.MAX_REST_NOTES = 4; // max. number of rest notes allowed
+  this.BEATS_IN_MEASURE = 4; // we're in 4/4 time
 
   /*
    * Set up other instance variables
