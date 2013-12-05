@@ -12,6 +12,9 @@
         margin: 0 auto;
         cursor: pointer;
       }
+      #tap-feedback {
+        display: none
+      }
 
     </style>
   </head>
@@ -24,10 +27,12 @@
 
 <!--     <div id='tap'></div> -->
 
-    <canvas id='notation' width=700 height=100></canvas><br>
+    <canvas id='notation' width=700 height=100></canvas>
+    <div class='tap-feedback' id='correct'></div>
+    <div class='tap-feedback' id='incorrect'></div><br>
 
     <button id='next'>Next measure</button><br>
-    <div id='feedback'></div>
+    <div id='results'></div>
 
 <!--     <canvas id='one' width=700 height=100></canvas> -->
 <!--     <canvas id='two' width=700 height=100></canvas> -->
@@ -409,7 +414,7 @@
 	<script type="text/javascript" src="js/measure.js"></script>
 	<script type="text/javascript" src="js/possible-durations.js"></script>
 	<script type="text/javascript" src="js/notecluster.js"></script>
-  <script type="text/javascript" src='js/metronome.js'></script>
+  <script type="text/javascript" src='js/rhythmr.js'></script>
   <script>
     var measure = new Measure();
     measure.fill();
