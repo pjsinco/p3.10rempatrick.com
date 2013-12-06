@@ -1,0 +1,39 @@
+body {
+  font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+}
+h1 {
+
+}
+#wrapper {
+  width: 515px;
+  margin: 0 auto;
+  position: relative;
+}
+.tap {
+  height: 100px;
+  width: 100px;
+    background-color: #f5f5f5; */
+  opacity: 0.2;
+  margin: 0 auto;
+}
+#tap-result {
+  text-align: right;
+} 
+.tap-feedback {
+  display: none;
+  font-size: 24px;
+}
+#count-in {
+  font-size: 48px;
+  position: absolute;
+  top: 176px;
+  left: 250px;
+  display: none;
+}
+#correct {
+  background-color: green; 
+}
+#incorrect {
+  background-color: red; 
+}
+

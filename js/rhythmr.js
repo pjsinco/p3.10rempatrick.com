@@ -6,6 +6,7 @@
   //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
 (function() {
+  // set up Web Audio API AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
   var kick;
@@ -29,7 +30,8 @@
   var GRACE_DURATION_TIME = 0.33;
 
   /*
-   *LOAD KICK
+   * Load kick drum
+   *
    */
   var request = new XMLHttpRequest();
   request.open('get', 'sounds/kick.wav', true);
@@ -46,9 +48,9 @@
   };
   request.send();
 
-  function getCurrentTime() {
-    return context.currentTime;
-  }
+  /*
+   * EVENT LISTENERS
+   */
 
   // load a new measure
   $('#next').click(function() {
@@ -95,14 +97,14 @@
           //$(this).hide();
         //});
 
-        $('#results').append('Yep ');
+        $('#tap-result').append('Yep ');
         //console.log('good');
         //console.log(' expected: ' + measure.tapTimings[tapCount]);
       } else if (tapDownIsCorrect(tapDown - startTime)) {
-        $('#results').append('Nope <small>(duration off)</small> ');
+        $('#tap-result').append('Nope <small>(duration off)</small> ');
         //$('#incorrect').show(100).hide();
       } else {
-        $('#results').append('Nope ');
+        $('#tap-result').append('Nope ');
         //console.log('bad');
       };
       //console.log('tapUp: ' + tapUp);
@@ -113,51 +115,9 @@
     };
   });
 
-
-  function tapDurationIsCorrect(duration) {
-    // calculate difference between expected duration and user's duration
-    var durationDiff = Math.abs(measure.tapDurations[tapCount] -
-      duration).toFixed(DECIMAL_PLACES);
-    //console.log(' durationDiff: ' + durationDiff);    
-    
-    // anything smaller than a quarter note will pass for an eighth
-    if (durationDiff <= GRACE_DURATION_TIME) {
-      console.log('  duration: good');
-      console.log('  durationDiff: ' + durationDiff);
-      console.log('  duration: ' + duration);
-      console.log('  expected: ' + measure.tapDurations[tapCount]);
-      return true;
-    } else {
-      console.log('  duration: bad');
-      console.log('  durationDiff: ' + durationDiff);
-      console.log('  duration: ' + duration);
-      console.log('  expected: ' + measure.tapDurations[tapCount]);
-      return false;
-    };
-  };
-
-  function countIn() {
-    $('canvas').fadeTo(100, 0.2);
-  };
-
-  function tapDownIsCorrect(timing) {
-    //console.log('  inside tapDownIsCorrect; timing: ' + timing);
-    //console.log('  compare to: ' + measure.tapTimings[tapCount]);
-    var timingDiff = Math.abs(measure.tapTimings[tapCount] -
-      timing).toFixed(DECIMAL_PLACES);
-    if (timingDiff <= GRACE_TAP_TIME ) {
-      return true;
-    };
-    
-    return false;
-    //console.log('diff: ' + 
-      //Math.abs(measure.tapTimings[tapCount] - 
-      //timing).toFixed(DECIMAL_PLACES));
-
-  }
-  
   /*
-   * User is starting the beat
+   * User presses ENTER, starts the beat
+   *
    */
   var beatAllowed = true;
   $(document).keypress(function(event) {
@@ -169,19 +129,19 @@
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
-        countIn();
         //$('#notation').css('opacity', '0.0'); // make staff disappear ...
         //$('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
-        $('#results').html(''); // reset feedback zone
+        $('#tap-result').html(''); // reset feedback zone
         console.log('starttime: ' + startTime);
         for (var i = 0;  // seems to be more reliable with slight delay
           i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
           i++) {
           // schedule the kick drum hits
           playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
-          // triggering seems a more reliable with slight, 0.01-sec. delay
+          // triggering of first beat more reliable with slight delay
         };
 
+        countIn();
 
         // allow ENTER to start the beat again after beat has played
         (function(){
@@ -200,12 +160,87 @@
     };
   });
   
+  /*
+   * FUNCTIONS
+   *
+   */
+  function getCurrentTime() {
+    return context.currentTime;
+  }
+
+  function tapDurationIsCorrect(duration) {
+    // calculate difference between expected duration and user's duration
+    var durationDiff = Math.abs(measure.tapDurations[tapCount] -
+      duration).toFixed(DECIMAL_PLACES);
+    //console.log(' durationDiff: ' + durationDiff);    
+    
+    // anything smaller than a quarter note will pass for an eighth
+    if (durationDiff <= GRACE_DURATION_TIME) {
+      //console.log('  duration: good');
+      //console.log('  durationDiff: ' + durationDiff);
+      //console.log('  duration: ' + duration);
+      //console.log('  expected: ' + measure.tapDurations[tapCount]);
+      return true;
+    } else {
+      //console.log('  duration: bad');
+      //console.log('  durationDiff: ' + durationDiff);
+      //console.log('  duration: ' + duration);
+      //console.log('  expected: ' + measure.tapDurations[tapCount]);
+      return false;
+    };
+  };
+
+  function countIn() {
+    // fade out staff during count-in
+    $('canvas').css('opacity', '0.2');
+
+    // fade it back in
+    window.setTimeout(function() {
+      $('canvas').css('opacity', '1.0')
+    }, quarterNoteTime * measure.COUNT_IN * 1000);
+
+    // show count-in
+    var count = 1;
+    $('#count-in').html(count).show();
+    var countInterval = window.setInterval(function() {
+      count++;
+      $('#count-in').html(count);
+    }, 500);
+
+    // clear the interval after count-in
+    window.setTimeout(function() {
+      window.clearInterval(countInterval);
+      $('#count-in').hide();
+    }, quarterNoteTime * measure.COUNT_IN * 1000);
+    
+    // fade in staff
+    //window.setTimeout(function() {
+      //$('canvas').fadeTo(50, 1.0);
+    //}, quarterNoteTime * measure.COUNT_IN);
+
+  };
+
+  function tapDownIsCorrect(timing) {
+    //console.log('  inside tapDownIsCorrect; timing: ' + timing);
+    //console.log('  compare to: ' + measure.tapTimings[tapCount]);
+    var timingDiff = Math.abs(measure.tapTimings[tapCount] -
+      timing).toFixed(DECIMAL_PLACES);
+    if (timingDiff <= GRACE_TAP_TIME ) {
+      return true;
+    };
+    
+    return false;
+    //console.log('diff: ' + 
+      //Math.abs(measure.tapTimings[tapCount] - 
+      //timing).toFixed(DECIMAL_PLACES));
+  };
+  
   function playSound(buffer, time) {
     // the 4 lines of code needed to play a kick
     var source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);
     source.start(time);
-  }
+  };
 
-})();
+})(); // end rhythmr
