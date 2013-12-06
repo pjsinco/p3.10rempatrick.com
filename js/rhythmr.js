@@ -6,6 +6,11 @@
   // http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
 (function() {
+  // set up the measure
+  var measure = new Measure();
+  measure.fill();
+  measure.render();
+
   // set up Web Audio API AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
@@ -19,13 +24,19 @@
 
   // absolute timing of first tap of spacebar
   var firstTap;
-  var tapCount = 0; // track # of times user taps spacebar
+
+  // track # of times user taps spacebar
+  var tapCount = 0; 
+
+  // track user's success
+  var successfulPerformance = true;
 
   var SPACEBAR = 32; // character code
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
+
   // amount of time before and after the precise timing we'll allow
-  var GRACE_TAP_TIME = 0.13;
+  var GRACE_TAP_TIME = 0.12;
   var GRACE_DURATION_TIME = 0.33;
 
   /*
@@ -48,7 +59,9 @@
   request.send();
 
   /*
+   *
    * EVENT LISTENERS
+   *
    */
 
   // load a new measure
@@ -101,9 +114,11 @@
         //console.log(' expected: ' + measure.tapTimings[tapCount]);
       } else if (tapDownIsCorrect(tapDown - startTime)) {
         $('#tap-result').append('Nope <small>(duration off)</small> ');
+        successfulPerformance = false;
         //$('#incorrect').show(100).hide();
       } else {
         $('#tap-result').append('Nope ');
+        successfulPerformance = false;
         //console.log('bad');
       };
       //console.log('tapUp: ' + tapUp);
@@ -120,11 +135,13 @@
    */
   var beatAllowed = true;
   $(document).keypress(function(event) {
+    // prevent more than one beat from playing at a time
     if (!beatAllowed) {
       return; 
     } else {
       if (event.which == ENTER_KEY) {
-        // prevent more than one beat from playing at a time
+        $('#performance-result').css('opacity', '0.0');
+        successfulPerformance = true; // reset
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
@@ -236,9 +253,12 @@
   function tapsAreCorrect() {
     console.log('  tapCount: ' + tapCount);
     console.log('  tapTimings.length: ' + measure.tapTimings.length);
+    console.log('  succesfulPerformance: ' + successfulPerformance);
     // make sure # of taps match
-    if (tapCount == measure.tapTimings.length) {
-
+    if (successfulPerformance && tapCount == measure.tapTimings.length) {
+      $('#performance-result').css('background-color', 'seagreen').html('<p>Good!</p>').fadeTo(200, 1.0);
+    } else {
+      $('#performance-result').css('background-color', 'indianred').html('<p>Not quite.</p>').fadeTo(200, 1.0);
     }
   }
 
