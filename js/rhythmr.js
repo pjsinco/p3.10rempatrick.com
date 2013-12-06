@@ -65,7 +65,7 @@
    */
 
   // load a new measure
-  $('#next').click(function() {
+  $('#new-measure').click(function() {
     location.reload();
   });
 
@@ -129,52 +129,56 @@
     };
   });
 
+  function playBeat() {
+    // resets
+    $('#performance-result').css('opacity', '0.0');
+    $('.options').css('opacity', '0.0');
+    $('#tap-result').html(''); 
+    successfulPerformance = true; 
+    beatAllowed = false; 
+    tapCount = 0; // reset tapCount
+    startTime = context.currentTime;
+    console.log('starttime: ' + startTime);
+    for (var i = 0;  // seems to be more reliable with slight delay
+      i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
+      i++) {
+      // schedule the kick drum hits
+      playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
+      // triggering of first beat more reliable with slight delay
+    };
+
+    countIn();
+
+    window.setTimeout(function() {
+      beatAllowed = true; // ENTER can once again begin the beat
+      $('.options').fadeTo(200, 1.0);
+      if (tapsAreCorrect()) { // evaluate performance
+        $('#performance-result').css('background-color', 'seagreen').
+          html('<p>Good!</p>').fadeTo(200, 1.0);
+      } else {
+        $('#performance-result').css('background-color', 'indianred').
+          html('<p>Not quite.</p>').fadeTo(200, 1.0);
+      }; 
+    }, quarterNoteTime * 
+      (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
+  };
+
+
   /*
    * User presses ENTER, starts the beat
    *
    */
   var beatAllowed = true;
   $(document).keypress(function(event) {
-    // prevent more than one beat from playing at a time
     if (!beatAllowed) {
-      return; 
+      return;
     } else {
       if (event.which == ENTER_KEY) {
-        $('#performance-result').css('opacity', '0.0');
-        successfulPerformance = true; // reset
-        beatAllowed = false; 
-        tapCount = 0; // reset tapCount
-        startTime = context.currentTime;
-        //$('#notation').css('opacity', '0.0'); // make staff disappear ...
-        //$('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
-        $('#tap-result').html(''); // reset feedback zone
-        console.log('starttime: ' + startTime);
-        for (var i = 0;  // seems to be more reliable with slight delay
-          i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
-          i++) {
-          // schedule the kick drum hits
-          playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
-          // triggering of first beat more reliable with slight delay
-        };
-
-        countIn();
-
-        // allow ENTER to start the beat again after beat has played
-        window.setTimeout(function() {
-          beatAllowed = true; 
-          tapsAreCorrect();
-        }, quarterNoteTime * 
-          (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
-  
-        //(function(){
-          //window.setTimeout(function() {
-            //$('#notation').css('opacity', '1.0')
-          //}, quarterNoteTime * measure.COUNT_IN * 1000);
-        //})();
+        playBeat();
       };
     };
   });
-  
+
   /*
    * FUNCTIONS
    *
@@ -256,10 +260,9 @@
     console.log('  succesfulPerformance: ' + successfulPerformance);
     // make sure # of taps match
     if (successfulPerformance && tapCount == measure.tapTimings.length) {
-      $('#performance-result').css('background-color', 'seagreen').html('<p>Good!</p>').fadeTo(200, 1.0);
-    } else {
-      $('#performance-result').css('background-color', 'indianred').html('<p>Not quite.</p>').fadeTo(200, 1.0);
-    }
+      return true
+    } 
+    return false;
   }
 
   function playSound(buffer, time) {
@@ -269,5 +272,11 @@
     source.connect(context.destination);
     source.start(time);
   };
+
+  $('#try-again').click(function() {
+    console.log('beatAllowed: ' + beatAllowed);
+    playBeat();
+  });
+
 
 })(); // end rhythmr
