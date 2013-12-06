@@ -1,18 +1,17 @@
   // With help from:
-  //https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
-  //http://www.html5rocks.com/en/tutorials/webaudio/intro/
-  //http://www.html5rocks.com/en/tutorials/audio/scheduling/
-  //http://www.youtube.com/watch?v=1wYTkZVQKzs
-  //http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
+  // https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
+  // http://www.html5rocks.com/en/tutorials/webaudio/intro/
+  // http://www.html5rocks.com/en/tutorials/audio/scheduling/
+  // http://www.youtube.com/watch?v=1wYTkZVQKzs
+  // http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
 
 (function() {
   // set up Web Audio API AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
   var kick;
-  //var osc; // user's tap sound
   var tempo = 120;
-  var quarterNoteTime = (60 / tempo);
+  var quarterNoteTime = (60 / tempo); // each quarter note gets 0.5 sec
   var startTime;
   var tapDown, tapUp; // track timing of tap
   // help us prevent auto-repeat when key is held down
@@ -144,12 +143,11 @@
         countIn();
 
         // allow ENTER to start the beat again after beat has played
-        (function(){
-          window.setTimeout(function() {
-            beatAllowed = true; 
-          }, quarterNoteTime * 
-            (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
-        })();
+        window.setTimeout(function() {
+          beatAllowed = true; 
+          tapsAreCorrect();
+        }, quarterNoteTime * 
+          (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
   
         //(function(){
           //window.setTimeout(function() {
@@ -235,6 +233,15 @@
       //timing).toFixed(DECIMAL_PLACES));
   };
   
+  function tapsAreCorrect() {
+    console.log('  tapCount: ' + tapCount);
+    console.log('  tapTimings.length: ' + measure.tapTimings.length);
+    // make sure # of taps match
+    if (tapCount == measure.tapTimings.length) {
+
+    }
+  }
+
   function playSound(buffer, time) {
     // the 4 lines of code needed to play a kick
     var source = context.createBufferSource();

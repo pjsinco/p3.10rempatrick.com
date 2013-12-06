@@ -9,13 +9,14 @@
       <h1>Rhythmr</h1>
       <p>Play the notated rhythm using the spacebar.<br>
       Express a note's duration by holding down the spacebar.<br>
-      ENTER starts the kick drum</p>
+      ENTER starts the kick drum.</p>
       <div id='count-in'></div>
       <canvas id='notation' width=550 height=100></canvas>
   
       <button id='next'>New measure</button><br>
 
       <div id='tap-result'></div>
+      
     </div><!-- end wrapper -->
   	<script type="text/javascript" src="js/vexflow-master/build/vexflow/vexflow-min.js"></script>		
   	<script type="text/javascript" src="js/measure.js"></script>
