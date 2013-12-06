@@ -10,7 +10,10 @@
       <p>Spacebar is your instrument. 
 <!--       <p>Play the notated rhythm using the spacebar.<br> -->
 <!--       Express a note's duration by holding down the spacebar.<br> -->
-      ENTER starts the kick drum.</p>
+<!--       One-bar count off on ENTER.</p> -->
+<!--       ENTER starts the kick drum.</p> -->
+<!--       ENTER starts the count off.</p> -->
+      Count-off on ENTER.</p>
       <div id='count-in'></div>
       <canvas id='notation' width=550 height=100></canvas>
   
