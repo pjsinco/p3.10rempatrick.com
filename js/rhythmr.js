@@ -134,17 +134,19 @@
     $('#performance-result').css('opacity', '0.0');
     $('.options').css('opacity', '0.0');
     $('#tap-result').html(''); 
-    successfulPerformance = true; 
     beatAllowed = false; 
+    successfulPerformance = true; 
     tapCount = 0; // reset tapCount
     startTime = context.currentTime;
     console.log('starttime: ' + startTime);
-    for (var i = 0;  // seems to be more reliable with slight delay
+
+    // schedule the beats
+    for (var i = 0;  
       i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
       i++) {
       // schedule the kick drum hits
       playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
-      // triggering of first beat more reliable with slight delay
+      // triggering first beat is more reliable with slight delay
     };
 
     countIn();
@@ -210,10 +212,12 @@
   };
 
   function countIn() {
+    console.log('inside countIn');
+
     // fade out staff during count-in
     $('canvas').css('opacity', '0.2');
 
-    // fade it back in
+    // fade it back in after count-in
     window.setTimeout(function() {
       $('canvas').css('opacity', '1.0')
     }, quarterNoteTime * measure.COUNT_IN * 1000);
@@ -224,19 +228,13 @@
     var countInterval = window.setInterval(function() {
       count++;
       $('#count-in').html(count);
-    }, 500);
+    }, quarterNoteTime * 1000);
 
     // clear the interval after count-in
     window.setTimeout(function() {
       window.clearInterval(countInterval);
       $('#count-in').hide();
     }, quarterNoteTime * measure.COUNT_IN * 1000);
-    
-    // fade in staff
-    //window.setTimeout(function() {
-      //$('canvas').fadeTo(50, 1.0);
-    //}, quarterNoteTime * measure.COUNT_IN);
-
   };
 
   function tapDownIsCorrect(timing) {
@@ -274,7 +272,9 @@
   };
 
   $('#try-again').click(function() {
-    console.log('beatAllowed: ' + beatAllowed);
+    if (!beatAllowed) {
+      return;
+    } 
     playBeat();
   });
 
