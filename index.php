@@ -9,7 +9,8 @@
   <body>
     <div id='wrapper'>
       <h1>Rhythmr</h1>
-      <p>Spacebar is your instrument. 
+      <p>Spacebar is your instrument. Play the notated phrase.
+<!--       Using the spacebar as your instrument, play the notated rhythm. -->
 <!--       <p>Play the notated rhythm using the spacebar.<br> -->
 <!--       Express a note's duration by holding down the spacebar.<br> -->
 <!--       One-bar count off on ENTER.</p> -->
@@ -19,7 +20,7 @@
       <div id='count-in'></div>
       <canvas id='notation' width=550 height=100></canvas>
   
-      <button id='next'>New measure</button><br>
+<!--       <button id='next' class='button'>New measure</button><br> -->
 
       <div id='tap-result'></div>
       <div id='performance-result'></div>

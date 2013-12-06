@@ -35,7 +35,7 @@ h1 {
 #count-in {
   font-size: 48px;
   position: absolute;
-  top: 130px;
+  top: 154px;
   left: 250px;
   display: none;
 }
@@ -51,41 +51,43 @@ a {
   color: #d0d0d0;
 }
 /* This button was generated using CSSButtonGenerator.com */
-.classname {
-  -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-  -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-  box-shadow:inset 0px 1px 0px 0px #ffffff;
-  background-color:#ededed;
-  -webkit-border-top-left-radius:8px;
-  -moz-border-radius-topleft:8px;
-  border-top-left-radius:8px;
-  -webkit-border-top-right-radius:8px;
-  -moz-border-radius-topright:8px;
-  border-top-right-radius:8px;
-  -webkit-border-bottom-right-radius:8px;
-  -moz-border-radius-bottomright:8px;
-  border-bottom-right-radius:8px;
-  -webkit-border-bottom-left-radius:8px;
-  -moz-border-radius-bottomleft:8px;
-  border-bottom-left-radius:8px;
-  text-indent:0;
-  border:1px solid #dcdcdc;
-  display:inline-block;
-  color:#777777;
-  font-family:Arial;
-  font-size:15px;
-  font-weight:bold;
-  font-style:normal;
-  height:50px;
-  line-height:50px;
-  width:100px;
-  text-decoration:none;
-  text-align:center;
-  text-shadow:1px 1px 0px #ffffff;
-}.classname:hover {
-  background-color:#dfdfdf;
-}.classname:active {
-  position:relative;
-  top:1px;
-}</style>
+.button {
+  -moz-box-shadow: inset 0px 1px 0px 0px #ffffff;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #ffffff;
+  box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background-color: #ededed;
+  -webkit-border-top-left-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -moz-border-radius-topright: 8px;
+  border-top-right-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  -moz-border-radius-bottomright: 8px;
+  border-bottom-right-radius: 8px;
+  -webkit-border-bottom-left-radius: 8px;
+  -moz-border-radius-bottomleft: 8px;
+  border-bottom-left-radius: 8px;
+  text-indent: 0;
+  border: 1px solid #dcdcdc;
+  display: inline-block;
+  color: #777777;
+  font-family: Arial;
+  font-size: 15px;
+  font-weight: bold;
+  font-style: normal;
+  height: 40px;
+  line-height: 50px;
+  width: 120px;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 1px 1px 0px #ffffff;
+}
+.button: hover {
+  background-color: #dfdfdf;
+}
+.button: active {
+  position: relative;
+  top: 1px;
+}
 
