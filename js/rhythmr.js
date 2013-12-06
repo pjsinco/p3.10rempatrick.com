@@ -9,6 +9,7 @@
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
   var kick;
+  //var osc; // user's tap sound
   var tempo = 120;
   var quarterNoteTime = (60 / tempo);
   var startTime;
@@ -25,12 +26,11 @@
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
   // amount of time before and after the precise timing we'll allow
-  var GRACE_TAP_TIME = 0.12;
+  var GRACE_TAP_TIME = 0.13;
   var GRACE_DURATION_TIME = 0.33;
 
 
   console.log(' expedted tapDuations: ' + measure.tapDurations);
-
 
 
   function getCurrentTime() {
@@ -55,6 +55,7 @@
   };
   request.send();
 
+
   // load a new measure
   $('#next').click(function() {
     location.reload();
@@ -73,6 +74,7 @@
     };
     if (event.which == SPACEBAR && keyAllowed) {
       tapDown = getCurrentTime();
+
       //console.log('abs tapDown: ' + tapDown);
       //console.log('starttime spacebar: ' + startTime);
       console.log(' tapped: ' + 
@@ -95,11 +97,16 @@
       //console.log(' tapup: ' + tapUp);
       if (tapDownIsCorrect(tapDown - startTime) &&
           tapDurationIsCorrect(duration)) {
-        $('#results').append('<p>Yep</p>');
+        //$('#correct').show(200, function() {
+          //$(this).hide();
+        //});
+
+        $('#results').append('Yep ');
         //console.log('good');
         //console.log(' expected: ' + measure.tapTimings[tapCount]);
       } else {
-        $('#results').append('<p>Nope</p>');
+        //$('#incorrect').show(100).hide();
+        $('#results').append('Nope ');
         //console.log('bad');
       };
       //console.log('tapUp: ' + tapUp);
@@ -110,9 +117,6 @@
     };
   });
 
-  function inCountIn() {
-    
-  }
 
   function tapDurationIsCorrect(duration) {
     // calculate difference between expected duration and user's duration
@@ -133,7 +137,7 @@
       console.log('  duration: ' + duration);
       console.log('  expected: ' + measure.tapDurations[tapCount]);
       return false;
-    }
+    };
   };
 
   function tapDownIsCorrect(timing) {
@@ -169,11 +173,12 @@
         //$('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
         $('#results').html(''); // reset feedback zone
         console.log('starttime: ' + startTime);
-        for (var i = 0; 
+        for (var i = 0;  // seems to be more reliable with slight delay
           i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
           i++) {
           // schedule the kick drum hits
-          playSound(kick, context.currentTime + (quarterNoteTime * i));
+          playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
+          // triggering seems a more reliable with slight, 0.01-sec. delay
         };
 
 
