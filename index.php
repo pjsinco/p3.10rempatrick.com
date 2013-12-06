@@ -42,7 +42,7 @@
     <div id='wrapper'>
       <h1>Rhythmr</h1>
       <p>Play the notated rhythm using the spacebar.<br>
-      Hold the spacebar down to express a note's duration.<br>
+      Express a note's duration by holding down the spacebar.<br>
       Press ENTER to start (count-in: 1 bar)</p>
   
   <!--     <div class='tap' id='correct'></div> -->

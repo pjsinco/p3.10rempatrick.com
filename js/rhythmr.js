@@ -14,9 +14,8 @@
   var quarterNoteTime = (60 / tempo);
   var startTime;
   var tapDown, tapUp; // track timing of tap
-  // helps prevent recording auto-repeat when key is held down
+  // help us prevent auto-repeat when key is held down
   var keyAllowed = true; 
-
 
   // absolute timing of first tap of spacebar
   var firstTap;
@@ -28,14 +27,6 @@
   // amount of time before and after the precise timing we'll allow
   var GRACE_TAP_TIME = 0.13;
   var GRACE_DURATION_TIME = 0.33;
-
-
-  console.log(' expedted tapDuations: ' + measure.tapDurations);
-
-
-  function getCurrentTime() {
-    return context.currentTime;
-  }
 
   /*
    *LOAD KICK
@@ -55,6 +46,9 @@
   };
   request.send();
 
+  function getCurrentTime() {
+    return context.currentTime;
+  }
 
   // load a new measure
   $('#next').click(function() {
@@ -104,8 +98,10 @@
         $('#results').append('Yep ');
         //console.log('good');
         //console.log(' expected: ' + measure.tapTimings[tapCount]);
-      } else {
+      } else if (tapDownIsCorrect(tapDown - startTime)) {
+        $('#results').append('Nope <small>(duration off)</small> ');
         //$('#incorrect').show(100).hide();
+      } else {
         $('#results').append('Nope ');
         //console.log('bad');
       };
@@ -140,6 +136,10 @@
     };
   };
 
+  function countIn() {
+    $('canvas').fadeTo(100, 0.2);
+  };
+
   function tapDownIsCorrect(timing) {
     //console.log('  inside tapDownIsCorrect; timing: ' + timing);
     //console.log('  compare to: ' + measure.tapTimings[tapCount]);
@@ -169,6 +169,7 @@
         beatAllowed = false; 
         tapCount = 0; // reset tapCount
         startTime = context.currentTime;
+        countIn();
         //$('#notation').css('opacity', '0.0'); // make staff disappear ...
         //$('#notation').fadeTo((measure.COUNT_IN * measure.QUARTER) * 1000, 1.0); // ... then fade in during count-in
         $('#results').html(''); // reset feedback zone
