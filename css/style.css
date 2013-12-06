@@ -44,9 +44,12 @@ h1 span {
   margin-top: 12px;
   color: #fff;
   border-radius: 3px;
+  float: left;
+  position: relative;
 }
 #performance-result p {
   font-size: 24px;
+  margin-top: 3px;
 }
 #count-in {
   font-size: 48px;
