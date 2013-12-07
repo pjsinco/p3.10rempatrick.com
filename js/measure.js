@@ -48,7 +48,6 @@ function Measure() {
     // generate NoteCluster objects
     while (this.numEights > 0) {
       var cluster = new NoteCluster(this.numEights);
-      console.log('cluster.durations: ' + cluster.durations);
       this.group.push(cluster);
       this.numEights -= cluster.clusterSum;
     };

@@ -8,8 +8,7 @@
   <body>
     <div id='wrapper'>
       <h1>Rhythmr <span>Practice sight-reading rhythms</span></h1>
-<!--       <h1>Rhythmr</h1> -->
-      <p>Spacebar is your instrument. Count-off on ENTER.</p>
+      <p>Spacebar is your instrument. ENTER starts the count-off.</p>
       <div id='count-in'></div>
       <canvas id='notation' width=550 height=100></canvas>
   

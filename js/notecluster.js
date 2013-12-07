@@ -23,8 +23,6 @@ function NoteCluster(size) {
   *   'h' = half-note
   */
   this.generateDurations = function() {
-    //console.log('inside generateDurations');
-    //console.log('possibleDurations[size].length: ' + possibleDurations[this.clusterSum].length);
 
     //we're going to yank a random array from durations.js
     //that corresponds to the size of our cluster
