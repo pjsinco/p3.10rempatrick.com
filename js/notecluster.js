@@ -44,4 +44,4 @@ function NoteCluster(size) {
 
   this.generateDurations();
 
-};
+}; // eoc

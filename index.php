@@ -23,10 +23,10 @@
       
     </div><!-- end wrapper -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>		
-  	<script type="text/javascript" src="js/vexflow-min.js"></script>		
-  	<script type="text/javascript" src="js/measure.js"></script>
-  	<script type="text/javascript" src="js/possible-durations.js"></script>
-  	<script type="text/javascript" src="js/notecluster.js"></script>
+    <script type="text/javascript" src="js/vexflow-min.js"></script>		
+    <script type="text/javascript" src="js/measure.js"></script>
+    <script type="text/javascript" src="js/possible-durations.js"></script>
+    <script type="text/javascript" src="js/notecluster.js"></script>
     <script type="text/javascript" src='js/rhythmr.js'></script>
   </body>
 </html>
