@@ -1,25 +1,35 @@
-  // With help from:
-  // https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
-  // http://www.html5rocks.com/en/tutorials/webaudio/intro/
-  // http://www.html5rocks.com/en/tutorials/audio/scheduling/
-  // http://www.youtube.com/watch?v=1wYTkZVQKzs
-  // http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
+/*
+ * With help from:
+ * https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioContext-section
+ * http://www.html5rocks.com/en/tutorials/webaudio/intro/
+ * http://www.html5rocks.com/en/tutorials/audio/scheduling/
+ * http://www.youtube.com/watch?v=1wYTkZVQKzs
+ * http://chimera.labs.oreilly.com/books/1234000001552/ch01.html#s01_8
+ *
+ */
 
 (function() {
-  // set up the measure
+  /*
+   * Set up the measure
+   *
+   */
   var measure = new Measure();
   measure.fill();
   measure.render();
 
-  // set up Web Audio API AudioContext
+  /*
+   * Set up Web Audio API AudioContext
+   *
+   */
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
   var kick;
   var tempo = 120;
   var quarterNoteTime = (60 / tempo); // each quarter note gets 0.5 sec
   var startTime;
-  var tapDown, tapUp; // track timing of tap
-  // help us prevent auto-repeat when key is held down
+  var tapDown, tapUp; // track timing of a tap
+
+  // help prevent auto-repeat when key is held down
   var keyAllowed = true; 
 
   // absolute timing of first tap of spacebar
@@ -31,6 +41,11 @@
   // track user's success
   var successfulPerformance = true;
 
+
+  /*
+   * Set up our constants
+   *
+   */
   var SPACEBAR = 32; // character code
   var ENTER_KEY = 13; // character code
   var DECIMAL_PLACES = 2; // how tightly we'll track timing
@@ -46,11 +61,10 @@
   var request = new XMLHttpRequest();
   request.open('get', 'sounds/kick.wav', true);
   request.responseType = 'arraybuffer'; //get raw binary data, not text
-  //set up what we do with onload once it's finished loading
+
+  // set up what we do with onload once it's finished loading
   request.onload = function() {
-    //pass decoder response from request; 
-    //for the callback, pass in buffer, which is what has just loaded
-    //(is buffer what is returned from decodeAudioData()?)
+    // for the callback, pass in buffer, which is what has just loaded
     context.decodeAudioData(request.response, function(buffer) {
       //decode audio and store in a variable so we can refer back to it
       kick = buffer;
@@ -59,76 +73,14 @@
   request.send();
 
   /*
-   *
-   * EVENT LISTENERS
+   * FUNCTIONS
    *
    */
-
-  // load a new measure
-  $('#new-measure').click(function() {
-    location.reload();
-  });
-
-  // prevent repeated ENTER presses from triggering multiple beat-plays
-  //help from:
-  //http://stackoverflow.com/questions/7686197/how-can-i-avoid-autorepeated-keydown-events-in-javascript 
 
   /*
-   * User starts a tap
+   * Plays four-on-the-floor to accompany user
+   *
    */
-  $(window).keydown(function(event) {
-    if (event.which == SPACEBAR) {
-      event.preventDefault(); // disable scrolling
-    };
-    if (event.which == SPACEBAR && keyAllowed) {
-      tapDown = getCurrentTime();
-
-      //console.log('abs tapDown: ' + tapDown);
-      //console.log('starttime spacebar: ' + startTime);
-      console.log(' tapped: ' + 
-        (tapDown - startTime).toFixed(DECIMAL_PLACES));
-      keyAllowed = false;
-    };
-  });
-
-  /*
-   * User ends a tap
-   */
-  $(window).keyup(function(event) {
-    if (event.which == SPACEBAR) {
-      //console.log('tapCount: ' + tapCount);
-      //console.log(' startTime: ' + startTime);
-      //console.log(' tapdown: ' + tapDown);
-      //console.log(' tapdown - startTime: ' + (tapDown - startTime));
-      tapUp = getCurrentTime();
-      var duration = (tapUp - tapDown).toFixed(DECIMAL_PLACES);
-      //console.log(' tapup: ' + tapUp);
-      if (tapDownIsCorrect(tapDown - startTime) &&
-          tapDurationIsCorrect(duration)) {
-        //$('#correct').show(200, function() {
-          //$(this).hide();
-        //});
-
-        $('#tap-result').append('Yep ');
-        //console.log('good');
-        //console.log(' expected: ' + measure.tapTimings[tapCount]);
-      } else if (tapDownIsCorrect(tapDown - startTime)) {
-        $('#tap-result').append('Nope <small>(duration off)</small> ');
-        successfulPerformance = false;
-        //$('#incorrect').show(100).hide();
-      } else {
-        $('#tap-result').append('Nope ');
-        successfulPerformance = false;
-        //console.log('bad');
-      };
-      //console.log('tapUp: ' + tapUp);
-      keyAllowed = true;
-      tapCount++; // increment tap count
-      //console.log(' tap duration: ' + 
-        //((tapUp - tapDown).toFixed(DECIMAL_PLACES)));
-    };
-  });
-
   function playBeat() {
     // resets
     $('#performance-result').css('opacity', '0.0');
@@ -138,23 +90,24 @@
     successfulPerformance = true; 
     tapCount = 0; // reset tapCount
     startTime = context.currentTime;
-    console.log('starttime: ' + startTime);
 
     // schedule the beats
     for (var i = 0;  
       i < measure.COUNT_IN + measure.BEATS_IN_MEASURE; 
       i++) {
       // schedule the kick drum hits
-      playSound(kick, 0.01 + context.currentTime + (quarterNoteTime * i));
-      // triggering first beat is more reliable with slight delay
+      playSound(kick, 0.01 + context.currentTime + 
+        (quarterNoteTime * i));
+      // note: sounding of first beat is more reliable with slight delay
     };
 
     countIn();
 
+    // schedule feedback after beat is through 
     window.setTimeout(function() {
       beatAllowed = true; // ENTER can once again begin the beat
       $('.options').fadeTo(200, 1.0);
-      if (tapsAreCorrect()) { // evaluate performance
+      if (tapsAreCorrect()) { 
         $('#performance-result').css('background-color', 'seagreen').
           html('<p>Good!</p>').fadeTo(200, 1.0);
       } else {
@@ -165,55 +118,40 @@
       (measure.COUNT_IN + measure.BEATS_IN_MEASURE) * 1000);
   };
 
-
   /*
-   * User presses ENTER, starts the beat
-   *
-   */
-  var beatAllowed = true;
-  $(document).keypress(function(event) {
-    if (!beatAllowed) {
-      return;
-    } else {
-      if (event.which == ENTER_KEY) {
-        playBeat();
-      };
-    };
-  });
-
-  /*
-   * FUNCTIONS
+   * @desc Determines the current time of the AudioContext object
+   * @return the current time as a float
    *
    */
   function getCurrentTime() {
     return context.currentTime;
   }
 
+  /*
+   * @desc Determines whether the user's tap was the correct ruation
+   * for the given note
+   * @return boolean
+   *
+   */
   function tapDurationIsCorrect(duration) {
     // calculate difference between expected duration and user's duration
     var durationDiff = Math.abs(measure.tapDurations[tapCount] -
       duration).toFixed(DECIMAL_PLACES);
-    //console.log(' durationDiff: ' + durationDiff);    
     
     // anything smaller than a quarter note will pass for an eighth
     if (durationDiff <= GRACE_DURATION_TIME) {
-      //console.log('  duration: good');
-      //console.log('  durationDiff: ' + durationDiff);
-      //console.log('  duration: ' + duration);
-      //console.log('  expected: ' + measure.tapDurations[tapCount]);
       return true;
-    } else {
-      //console.log('  duration: bad');
-      //console.log('  durationDiff: ' + durationDiff);
-      //console.log('  duration: ' + duration);
-      //console.log('  expected: ' + measure.tapDurations[tapCount]);
-      return false;
-    };
+    } 
+
+    return false;
   };
 
+  /*
+   * @desc Takes care of everything that needs to happen
+   * during the count-in
+   *
+   */
   function countIn() {
-    console.log('inside countIn');
-
     // fade out staff during count-in
     $('canvas').css('opacity', '0.2');
 
@@ -237,9 +175,13 @@
     }, quarterNoteTime * measure.COUNT_IN * 1000);
   };
 
+  /*
+   * @desc Determines if the user's tap-down timing is correct
+   * @param The timing of the user's tap-down
+   * @return boolean - true for correct timing
+   *
+   */
   function tapDownIsCorrect(timing) {
-    //console.log('  inside tapDownIsCorrect; timing: ' + timing);
-    //console.log('  compare to: ' + measure.tapTimings[tapCount]);
     var timingDiff = Math.abs(measure.tapTimings[tapCount] -
       timing).toFixed(DECIMAL_PLACES);
     if (timingDiff <= GRACE_TAP_TIME ) {
@@ -247,15 +189,14 @@
     };
     
     return false;
-    //console.log('diff: ' + 
-      //Math.abs(measure.tapTimings[tapCount] - 
-      //timing).toFixed(DECIMAL_PLACES));
   };
   
+  /*
+   * @desc Determines if all of the users taps were correct
+   * @return boolean - true for all correct
+   *
+   */
   function tapsAreCorrect() {
-    console.log('  tapCount: ' + tapCount);
-    console.log('  tapTimings.length: ' + measure.tapTimings.length);
-    console.log('  succesfulPerformance: ' + successfulPerformance);
     // make sure # of taps match
     if (successfulPerformance && tapCount == measure.tapTimings.length) {
       return true
@@ -263,13 +204,82 @@
     return false;
   }
 
+  /*
+   * @desc Plays a sound
+   * @param buffer: the sound to play
+   * @param time: when to play the sound
+   *
+   */
   function playSound(buffer, time) {
-    // the 4 lines of code needed to play a kick
+    // Need 4 lines of code to play a kick every time!
     var source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);
     source.start(time);
   };
+
+  /*
+   * EVENT LISTENERS
+   *
+   */
+
+  /*
+   * User presses ENTER, starts the beat
+   */
+  var beatAllowed = true;
+  $(document).keypress(function(event) {
+    if (!beatAllowed) { // make sure multiple beat sets can't play 
+      return;
+    } else {
+      if (event.which == ENTER_KEY) {
+        playBeat();
+      };
+    };
+  });
+
+
+  /*
+   * Load a new measure
+   */
+  $('#new-measure').click(function() {
+    location.reload();
+  });
+
+
+  /*
+   * User starts a tap
+   */
+  $(window).keydown(function(event) {
+    if (event.which == SPACEBAR) {
+      event.preventDefault(); // disable scrolling
+    };
+    if (event.which == SPACEBAR && keyAllowed) {
+      tapDown = getCurrentTime();
+      keyAllowed = false;
+    };
+  });
+
+  /*
+   * User ends a tap
+   */
+  $(window).keyup(function(event) {
+    if (event.which == SPACEBAR) {
+      tapUp = getCurrentTime();
+      var duration = (tapUp - tapDown).toFixed(DECIMAL_PLACES);
+      if (tapDownIsCorrect(tapDown - startTime) &&
+        tapDurationIsCorrect(duration)) {
+        $('#tap-result').append('Yep ');
+      } else if (tapDownIsCorrect(tapDown - startTime)) {
+        $('#tap-result').append('Nope <small>(duration off)</small> ');
+        successfulPerformance = false;
+      } else {
+        $('#tap-result').append('Nope ');
+        successfulPerformance = false;
+      };
+      keyAllowed = true;
+      tapCount++; // increment tap count
+    };
+  });
 
   $('#try-again').click(function() {
     if (!beatAllowed) {
@@ -277,6 +287,5 @@
     } 
     playBeat();
   });
-
 
 })(); // end rhythmr

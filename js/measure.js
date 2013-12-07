@@ -1,5 +1,6 @@
  /*
   * A grouping of NoteCluster objects adding up to one 4/4 measure
+  *
   */
 function Measure() {
   /*
@@ -18,8 +19,8 @@ function Measure() {
    */
   this.HALF = 1.0; // duration in seconds of a half note, 120 bpm
   this.DOTTED_QUARTER = 0.75; // duration in seconds of a dotted quarter
-  this.QUARTER = 0.5; // duration in secnds of a quarter note
-  this.EIGHTH = 0.25; // duration in secnds of a eighth note
+  this.QUARTER = 0.5; // duration in seconds of a quarter note
+  this.EIGHTH = 0.25; // duration in seconds of a eighth note
   this.COUNT_IN = 4; // number of quarter notes in a count-in
   this.MAX_REST_NOTES = 4; // max. number of rest notes allowed
   this.BEATS_IN_MEASURE = 4; // we're in 4/4 time
@@ -27,20 +28,21 @@ function Measure() {
   /*
    * Set up other instance variables
    */
-  this.numEights = 8; // number of eigth-notes remaining in measure
+  this.numEights = 8; // number of eighth-notes remaining in measure
   this.group = new Array(); // array of NoteCluster objects
   this.allNotes = new Array(); // of Vex.Flow.StaveNote objects
   this.tapTimings = new Array(); // schedule of expected taps 
   this.tapDurations = new Array(); // schedule of expected taps 
   this.restNotes = 0; // # of rest notes, measured in 8th-note values
+
+  // track how many seconds have elapsed in measure;
+  // used to help calculate tapTimings
   this.timeElapsed = this.COUNT_IN * this.QUARTER; 
-    // track how many seconds have elapsed in measure;
-    // used to help calculate tapTimings
 
   /*
-   * Fills measure with NoteClusters whose durations sum to 8;
-   * for ex., if there are 3 NoteClusters, their durations could
-   * be 2, 1, 5; if there are 4, durations could be 1, 1, 5, 1
+   * @desc Fills measure with NoteClusters whose durations sum to 8;
+   *   for ex., if there are 3 NoteClusters, their durations could
+   *   be 2, 1, 5; if there are 4, durations could be 1, 1, 5, 1
    */
   this.fill = function() {
     // generate NoteCluster objects
@@ -52,8 +54,7 @@ function Measure() {
     };
 
     // convert array of NoteCluster objects into a group of
-    // Vex.Flow.StaveNote objects
-    console.log('this.group.length: ' + this.group.length);
+    // Vex.Flow.StaveNote objects;
     // iterate over each NoteCluster object in this.group
     for (var i = 0; i < this.group.length; i++) {
       // iterate over each duration array in each NoteCluster
@@ -68,7 +69,7 @@ function Measure() {
 
         // instantiate a new StaveNote object
         var note = new Vex.Flow.StaveNote({
-          keys: ['b/4'],
+          keys: ['b/4'], // we'll stick with B notes
           duration: dur
         });
 
@@ -79,20 +80,23 @@ function Measure() {
 
         this.allNotes.push(note);
 
-        //update tapTimings based on this note
+        // update tapTimings based on this note
         this.processTapTiming(dur);
       };
     };
-  console.log(this.tapTimings);
-  console.log(this.group);
   };
 
-  //randomly generate rest notes based on a coin-flip
+  /*
+   * @desc Randomly generates a rest note 
+   * @param a Vex.Flow.StaveNote duration to possibly
+   *   convert into a rest
+   * @return boolean indicating whether the note should
+   *   be a rest 
+   */
   this.isRestNote = function(duration) {
     if (this.restNotes < this.MAX_REST_NOTES) {
       // generate a 0 or 1
       if (Math.floor(Math.random() * 2) == 0) {
-      //if (Math.floor(Math.random() * 2) == 0) {
         // we have rest, so appropriately increment tally of rest notes
         switch (duration) {
           case '8':
@@ -116,6 +120,12 @@ function Measure() {
     return false;
   }
 
+  /*
+   * @desc Determines if a note is dotted
+   * @param duration: the note to check
+   * @return boolean - true if note is dotted
+   *
+   */
   this.isDotted = function(duration) {
     //iterate through duration, checking for a 'd'
     for (var i = 0; i < duration.length; i++) {
@@ -126,16 +136,23 @@ function Measure() {
     return false;
   }
 
-  this.render = function(duration) {
+  /*
+   *@desc Draws the staff and notes
+   *
+   */
+  this.render = function() {
     Vex.Flow.Formatter.FormatAndDraw(
       this.ctx, this.stave, this.allNotes
     );
   };
 
-  // helper method to translate notes into tap timings,
-  // measured in seconds
+   /*
+    * @desc Translates notes into tap timings,
+    * measured in seconds
+    * @param a Vex.Flow.StaveNote duration
+    *
+    */
   this.processTapTiming = function(dur) {
-
     if (dur == 'h' || dur == 'hr') {
       if (dur == 'h') {
         this.tapTimings.push(this.timeElapsed);
@@ -164,6 +181,3 @@ function Measure() {
   };
 
 }; //eoc
-
-
-
