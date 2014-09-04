@@ -288,4 +288,4 @@
     playBeat();
   });
 
-})(); // end rhythmr
+})(); // end spizby

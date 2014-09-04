@@ -3,11 +3,11 @@
   <head>
     <link rel='stylesheet' href='css/style.css'  type='text/css'>
     <meta charset="utf-8">
-    <title>Rhythmr | Practice sight-reading rhythms</title>
+    <title>Spizby | Practice sight-reading rhythms</title>
   </head>
   <body>
     <div id='wrapper'>
-      <h1>Rhythmr <span>Practice sight-reading rhythms</span></h1>
+      <h1>Spizby <span>Practice sight-reading rhythms</span></h1>
       <p>Spacebar is your instrument. ENTER starts the count-off.</p>
       <div id='count-in'></div>
       <canvas id='notation' width=550 height=100></canvas>
@@ -27,6 +27,6 @@
     <script type="text/javascript" src="js/measure.js"></script>
     <script type="text/javascript" src="js/possible-durations.js"></script>
     <script type="text/javascript" src="js/notecluster.js"></script>
-    <script type="text/javascript" src='js/rhythmr.js'></script>
+    <script type="text/javascript" src='js/spizby.js'></script>
   </body>
 </html>
